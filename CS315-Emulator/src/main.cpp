@@ -1,7 +1,13 @@
 #include <iostream>
+#include "Utils.h"
+#include "Window.h"
 
 int main(void)
 {
-	std::cout << "Hello world!" << std::endl;
+	Utils::InitSDL();
+	Window.Create();
+	Utils::InitGL();
+
+
 	return 0;
 }
