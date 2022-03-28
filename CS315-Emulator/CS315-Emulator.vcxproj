@@ -171,6 +171,7 @@
     <ClCompile Include="include\imgui\imgui_tables.cpp" />
     <ClCompile Include="include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Editor.cpp" />
+    <ClCompile Include="src\Disassembler.cpp" />
     <ClCompile Include="src\Emulator.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="include\imgui\imstb_textedit.h" />
     <ClInclude Include="include\imgui\imstb_truetype.h" />
     <ClInclude Include="src\Editor.h" />
+    <ClInclude Include="src\Disassembler.h" />
     <ClInclude Include="src\Emulator.h" />
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\Utils.h" />

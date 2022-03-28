@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Editor">
       <UniqueIdentifier>{6939564f-9c94-443a-9d9d-2ef57ae46b9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Disassembler">
+      <UniqueIdentifier>{a9d728ea-5f89-40ec-8014-ae1a8578048d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -44,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="src\Emulator.cpp">
       <Filter>Source Files\Emulator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Disassembler.cpp">
+      <Filter>Source Files\Disassembler</Filter>
     </ClCompile>
     <ClCompile Include="src\Input.cpp">
       <Filter>Source Files\Input</Filter>
@@ -115,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="src\Editor.h">
       <Filter>Source Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Disassembler.h">
+      <Filter>Source Files\Disassembler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
