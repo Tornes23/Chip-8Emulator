@@ -170,8 +170,9 @@ namespace Utils
 
         if (count <= 0 || start + count > opcode_size)
             return 0;
-
-        return (buf_big_endian << (start * opcode_size)) >> (opcode_size * (opcode_size - count));
+        buf_big_endian <<= (start * opcode_size);
+        buf_big_endian >>= (opcode_size * (opcode_size - count));
+        return buf_big_endian;
     }
    
 }
