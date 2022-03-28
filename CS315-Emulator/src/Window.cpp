@@ -1,6 +1,7 @@
 #include <iostream>
 #include "gl/glew.h"
 #include "Window.h"
+#include "Input.h"
 
 void WindowClass::Create(glm::ivec2 size, std::string title)
 {
@@ -32,6 +33,8 @@ void WindowClass::Create(glm::ivec2 size, std::string title)
 		exit(1);
 	}
 }
+
+void WindowClass::Update() { if (KeyDown(Key::Esc)) mClosed = true; }
 
 void WindowClass::Clear()
 {

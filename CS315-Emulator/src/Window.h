@@ -18,6 +18,7 @@ public:
 
 	//member functions
 	void Create(glm::ivec2 size = {1280, 720}, std::string title = "CS315 CHIP-8 EMULATOR");
+	void Update();
 	void Clear();
 	void ShutDown();
 	void SwapBuffers();
