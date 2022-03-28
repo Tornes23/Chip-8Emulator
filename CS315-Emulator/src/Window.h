@@ -17,13 +17,10 @@ public:
 	}
 
 	//member functions
-	void Create(glm::ivec2 size = {1280, 720}, std::string title = "cs562_nestor.uriarte");
-	void Update();
+	void Create(glm::ivec2 size = {1280, 720}, std::string title = "CS315 CHIP-8 EMULATOR");
 	void Clear();
 	void ShutDown();
 	void SwapBuffers();
-	void StartFrame();
-	std::vector<float> GetFrames() const;
 	//setters
 	void CloseWindow();
 	//getters
@@ -38,10 +35,6 @@ private:
 	std::string mTitle;
 	glm::ivec2 mSize;
 	bool mClosed;
-	unsigned mStartTicks;
-	unsigned mEndTicks;
-	float mFrameRate;
-	std::vector<float> mFrames;
 	WindowClass() {}
 };
 

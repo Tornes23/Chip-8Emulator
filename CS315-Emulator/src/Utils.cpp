@@ -5,7 +5,6 @@
 #include <imgui/imgui.h>
 #include "Utils.h"
 #include "Window.h"
-#include "Camera.h"
 
 namespace Utils
 {

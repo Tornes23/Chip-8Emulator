@@ -1,7 +1,6 @@
 #include <iostream>
 #include "gl/glew.h"
 #include "Window.h"
-#include "InputManager.h"
 
 void WindowClass::Create(glm::ivec2 size, std::string title)
 {
@@ -34,8 +33,6 @@ void WindowClass::Create(glm::ivec2 size, std::string title)
 	}
 }
 
-void WindowClass::Update() { if (KeyDown(Key::Esc)) mClosed = true; }
-
 void WindowClass::Clear()
 {
 	//clearing the window to black and the depth buffer
@@ -56,26 +53,7 @@ void WindowClass::SwapBuffers()
 	SDL_GL_SetSwapInterval(0);
 	//swapping the front and back buffers
 	SDL_GL_SwapWindow(mWindow);
-	mEndTicks = SDL_GetTicks();
-	mFrameRate = (mEndTicks - mStartTicks) / 1000.0F;
-
-	if (mFrames.size() > 100)
-	{
-		for (size_t i = 1; i < mFrames.size(); i++)
-		{
-			mFrames[i - 1] = mFrames[i];
-		}
-	}
-
-	mFrames.push_back(1.0F / mFrameRate);
 }
-
-void WindowClass::StartFrame()
-{
-	mStartTicks = SDL_GetTicks();
-}
-
-std::vector<float> WindowClass::GetFrames() const { return mFrames; }
 
 void WindowClass::CloseWindow() { mClosed = true; }
 
