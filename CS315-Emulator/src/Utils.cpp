@@ -163,5 +163,15 @@ namespace Utils
         if(severity != GL_DEBUG_SEVERITY_NOTIFICATION)
             std::cerr << id << ":" << _type << " of " << _severity << " severity, raised from " << _source << ": " << message << "\n";
     }
+
+    uint16_t GetBits(uint16_t buf_big_endian, int start, int count)
+    {
+        constexpr int opcode_size = 4;
+
+        if (count <= 0 || start + count > opcode_size)
+            return 0;
+
+        return (buf_big_endian << (start * opcode_size)) >> (opcode_size * (opcode_size - count));
+    }
    
 }
