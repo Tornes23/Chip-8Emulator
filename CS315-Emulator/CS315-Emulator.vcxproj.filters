@@ -22,6 +22,9 @@
     <Filter Include="Source Files\Emulator">
       <UniqueIdentifier>{e876b86b-0b06-44f8-849f-fe7c70d60b64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Disassembler">
+      <UniqueIdentifier>{a9d728ea-5f89-40ec-8014-ae1a8578048d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -36,6 +39,9 @@
     <ClCompile Include="src\Emulator.cpp">
       <Filter>Source Files\Emulator</Filter>
     </ClCompile>
+    <ClCompile Include="src\Disassembler.cpp">
+      <Filter>Source Files\Disassembler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Utils.h">
@@ -46,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="src\Emulator.h">
       <Filter>Source Files\Emulator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Disassembler.h">
+      <Filter>Source Files\Disassembler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

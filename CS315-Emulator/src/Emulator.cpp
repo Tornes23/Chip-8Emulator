@@ -2,9 +2,9 @@
 
 void Chip8::Update()
 {
-	//get opcode, update stack and shit
+	//get Opcode, update stack and shit
 
-	//based on opcode
+	//based on Opcode
 
-	//if opcode display update texture
+	//if Opcode display update texture
 }
