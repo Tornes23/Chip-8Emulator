@@ -11,6 +11,9 @@ void Chip8::Update()
 }
 
 #pragma region SYSTEM FUNCTIONS
+void Chip8::SYS(short addr)
+{
+}
 void Chip8::CLS()
 {
 	std::memset(&mFrameBuffer, false, sizeof(mFrameBuffer));
@@ -35,38 +38,21 @@ void Chip8::DRW(char vX, char vY, short size)
 {
 
 }
+void Chip8::SE_VAL(char v, char k)
+{
+}
+void Chip8::SE_RGSTR(char v0, char v1)
+{
+}
+void Chip8::SNE_VAL(char v, char k)
+{
+}
+void Chip8::SNE_RGSTR(char v0, char v1)
+{
+}
 #pragma endregion
 
 #pragma region INSTRUCTION FUNCTIONS
-void Chip8::SE(char v, char k)
-{
-	if (mV[v] == k)
-	{
-
-	}
-}
-
-void Chip8::SE(char v0, char v1)
-{
-	if (mV[v0] == mV[v1])
-	{
-
-	}
-}
-void Chip8::SNE(char v, char k)
-{
-	if (mV[v] != k)
-	{
-
-	}
-}
-void Chip8::SNE(char v0, char v1)
-{
-	if (mV[v0] != mV[v0])
-	{
-
-	}
-}
 void Chip8::SKP(char v)
 {
 
@@ -75,17 +61,15 @@ void Chip8::SKNP(char v)
 {
 
 }
+void Chip8::LD_VAL(char v, char val)
+{
+}
+void Chip8::LD_RGSTR(char srcV, char dstV)
+{
+}
 #pragma endregion
 
 #pragma region LOAD FUNCTIONS
-void Chip8::LD(char v, char val)
-{
-	mV[v] = val;
-}
-void Chip8::LD(char srcV, char dstV)
-{
-	mV[dstV] = mV[srcV];
-}
 void Chip8::LDIN(unsigned short addr)
 {
 	mI = addr;

@@ -17,7 +17,7 @@ void WindowClass::Create(glm::ivec2 size, std::string title)
 		SDL_Quit();
 		exit(1);
 	}
-
+	
 	//setting the attributes for the opengl context
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);

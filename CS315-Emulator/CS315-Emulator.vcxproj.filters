@@ -78,6 +78,12 @@
     <ClCompile Include="src\Editor.cpp">
       <Filter>Source Files\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>Source Files\GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>Source Files\GFX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Utils.h">
@@ -124,6 +130,12 @@
     </ClInclude>
     <ClInclude Include="src\Disassembler.h">
       <Filter>Source Files\Disassembler</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer.h">
+      <Filter>Source Files\GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shader.h">
+      <Filter>Source Files\GFX</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

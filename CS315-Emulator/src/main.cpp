@@ -6,6 +6,7 @@
 #include "Disassembler.h"
 #include "Input.h"
 #include "Editor.h"
+#include "Shader.h"
 
 #undef main
 int main(void)
@@ -13,6 +14,7 @@ int main(void)
 	Utils::InitSDL();
 	Window.Create(glm::ivec2{Chip8::WIDTH * 5, Chip8::HEIGHT * 5});
 	Utils::InitGL();
+	ShaderProgram program;
 	InputManager.Initialize();
 	Editor.Initialize();
 	Chip8 Emulator;

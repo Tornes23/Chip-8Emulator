@@ -1,4 +1,4 @@
-#include <iostream>
+	#include <iostream>
 #include "Shader.h"
 #include "Utils.h"
 
@@ -199,7 +199,7 @@ void ShaderProgram::SetVec4Uniform(const std::string& name, glm::vec4 values)
 
 }
 
-void ShaderProgram::SetColorUniform(const std::string& name, Color c)
+void ShaderProgram::SetColorUniform(const std::string& name, glm::vec4 c)
 {
 	//getting the location of the uniform
 	GLuint location = GetUniformLoc(name);
@@ -212,7 +212,7 @@ void ShaderProgram::SetColorUniform(const std::string& name, Color c)
 	}
 
 	//setting the value
-	glUniform4fv(location, 1, &c.GetColor()[0]);
+	//	glUniform4fv(location, 1, &c.GetColor()[0]);
 }
 
 void ShaderProgram::Use()
