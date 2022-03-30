@@ -14,11 +14,13 @@ public:
 		, mFrameBuffer { {} }
 	{}
 
-	Chip8(Chip8 const&) = delete;
-	void operator=(Chip8 const&) = delete;
-
+	int LoadRom(std::string rom = "test_opcode.ch8");
 	void Update();
 	void Render();
+	void HandleOpcode(const Opcode& op);
+
+	void Ox8(const Opcode& op);
+	void OxF(const Opcode& op);
 
 	static const unsigned MEMORYSIZE = 4096;
 	static const unsigned STACKSIZE = 32;
@@ -44,7 +46,7 @@ private:
 	void CLS();
 	void RET();//to do
 	void JP(short addr);
-	void JP(char v0, short addr);//to do
+	void JPV0(short addr);//to do
 	void CALL(short addr);//to do
 	void DRW(char vX, char vY, short size);//to do
 
@@ -71,12 +73,12 @@ private:
 	void AND(char srcV, char dstV);
 	void XOR(char srcV, char dstV);
 
-	void ADD(char v, short val);
-	void ADD(char srcV, char dstV);
+	void ADD_VAL(char v, char val);
+	void ADD_RGSTR(char srcV, char dstV);
 	void ADDI(char v);//to do
 	void SUB(char srcV, char dstV);
 	void SUBN(char srcV, char dstV);
-	void RND(char v, short val);//to do
+	void RND(char v, char val);//to do
 
 
 	void SHR(char srcV, char dstV);

@@ -245,7 +245,7 @@ int Disassembler::LoadRom(std::string file)
 	return 0;
 }
 
-Disassembler::Opcode Disassembler::GetInstruction()
+Opcode Disassembler::GetInstruction()
 {
 	if (seekpos > romSize)
 		return Opcode(0x000);

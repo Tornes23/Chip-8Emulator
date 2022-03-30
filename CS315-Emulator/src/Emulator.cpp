@@ -2,17 +2,214 @@
 #include "Emulator.h"
 #include "Disassembler.h"
 
+int Chip8::LoadRom(std::string rom)
+{
+	if (mDisassembler.LoadRom(rom) < 0)
+		return -1;
+
+	return 0;
+}
+
 void Chip8::Update()
 {
 	//get Opcode, update stack and shit
-	mDisassembler.GetInstruction();
+	Opcode operation = mDisassembler.GetInstruction();
 	mPC += 2;
+
+	HandleOpcode(operation);
 
 	if (mDT > 0)
 		mDT--;
 	if (mST > 0)
 		mST--;
 
+
+}
+
+void Chip8::HandleOpcode(const Opcode& op)
+{
+	unsigned short first = op.mOpcode & 0xF000;
+	switch (first)
+	{
+		case 0x0:
+		{
+			if (op.mOpcode == 0x00E0)// CLS
+				CLS();
+			else if (op.mOpcode == 0x00EE)// RET
+				RET();
+			break;
+		}
+		case 0x1:// JP NNN
+		{
+			JP(op.GetMemory());
+			break;
+		}
+		case 0x2:// CALL NNN
+		{
+			CALL(op.GetMemory());
+			break;
+		}
+		case 0x3://SE VX KK
+		{
+			SE_VAL(op.GetSrcRegister(), op.GetValue());
+			break;
+		}
+		case 0x4://SNE VX KK
+		{
+			SNE_VAL(op.GetSrcRegister(), op.GetValue());
+			break;
+		}
+		case 0x5:
+		{
+			if (op.GetCount() == 0)//SE VX VY
+				SE_RGSTR(op.GetSrcRegister(), op.GetDestRegister());
+			break;
+		}
+		case 0x6://LD VX KK
+		{
+			LD_VAL(op.GetSrcRegister(), op.GetValue());
+			break;
+		}
+		case 0x7://ADD VX KK
+		{
+			ADD_VAL(op.GetSrcRegister(), op.GetValue());
+			break;
+		}
+		case 0x8:
+		{
+			Ox8(op);
+			break;
+		}
+		case 0x9://SNE VX VY
+		{
+			SNE_RGSTR(op.GetSrcRegister(), op.GetDestRegister());
+			break;
+		}
+		case 0xA://LD I NNN
+		{
+			LDIN(op.GetMemory());
+			break;
+		}
+		case 0xB://JP V0 NNN
+		{
+			JPV0(op.GetMemory());
+			break;
+		}
+		case 0xC://RND VX KK
+		{
+			RND(op.GetSrcRegister(), op.GetValue());
+			break;
+		}
+		case 0xD://DRW VX VY N
+		{
+			DRW(op.GetSrcRegister(), op.GetDestRegister(), op.GetCount());
+			break;
+		}
+		case 0xE://
+		{
+			short val = op.GetValue();
+			short src = op.GetSrcRegister();
+
+			if (val == 0x9E)//SKP VX
+				SKP(op.GetSrcRegister());
+			else if (val == 0xA1)//SKNP VX
+				SKNP(op.GetSrcRegister());
+
+			break;
+		}
+		case 0xF:
+		{
+			OxF(op);
+			break;
+		}
+	}
+}
+
+void Chip8::Ox8(const Opcode& op)
+{
+	uint16_t last = op.GetCount();
+
+	switch (last)
+	{
+	case 0x0://LD VX VY
+	{
+		std::cout << "LD V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
+		break;
+	}
+	case 0x1:
+	{
+		std::cout << "OR V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
+		break;
+	}
+	case 0x2:
+	{
+		std::cout << "AND V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
+		break;
+	}
+	case 0x3:
+	{
+		std::cout << "XOR V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
+		break;
+	}
+	case 0x4:
+	{
+		std::cout << "ADD V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
+		break;
+	}
+	case 0x5:
+	{
+		std::cout << "SUB V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
+		break;
+	}
+	case 0x6:
+	{
+		std::cout << "SHR V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
+		break;
+	}
+	case 0x7:
+	{
+		std::cout << "SUBN V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
+		break;
+	}
+	case 0xE:
+	{
+		std::cout << "SHL V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
+		break;
+	}
+	default:
+	{
+		std::cout << "UNKN";
+		break;
+	}
+	}
+	break;
+}
+
+void Chip8::OxF(const Opcode& op)
+{
+	short val = op.GetValue();
+	short src = op.GetSrcRegister();
+
+	if (val == 0x07)
+		std::cout << "LD V" << std::hex << src << "DT";
+	else if (val == 0x0a)
+		std::cout << "LD V" << std::hex << src << "K";
+	else if (val == 0x15)
+		std::cout << "LD DT" << " V" << std::hex << src;
+	else if (val == 0x18)
+		std::cout << "LD ST" << " V" << std::hex << src;
+	else if (val == 0x1e)
+		std::cout << "ADD I" << " V" << std::hex << src;
+	else if (val == 0x29)
+		std::cout << "LD F" << " V" << std::hex << src;
+	else if (val == 0x33)
+		std::cout << "LD B" << " V" << std::hex << src;
+	else if (val == 0x55)
+		std::cout << "LD I" << " V" << std::hex << src;
+	else if (val == 0x65)
+		std::cout << "LD V" << std::hex << src << " I";
+	else
+		std::cout << "UNKN";
 
 }
 

@@ -10,14 +10,17 @@
 #undef main
 int main(void)
 {
-	Disassembler disassembler;
+	Chip8 emulator;
+	if (emulator.LoadRom() < 0)
+		return -1;
+
 	Utils::InitSDL();
 	Window.Create(glm::ivec2{Chip8::WIDTH * 5, Chip8::HEIGHT * 5});
 	Utils::InitGL();
 	InputManager.Initialize();
 	Editor.Initialize();
 	Chip8 Emulator;
-
+	
 	while (!Window.IsClosed())
 	{
 		Editor.StartFrame();
@@ -26,25 +29,17 @@ int main(void)
 		
 		Window.Update();
 		Emulator.Update();
-
+	
 		Window.Clear();
 		Editor.Render();
 		Window.SwapBuffers();
-
+	
 	}
-
+	
 	Window.ShutDown();
 	Editor.ShutDown();
 	SDL_Quit();
 
-	if (disassembler.LoadRom("test_opcode.ch8") < 0)
-		return -1;
-
-	while (disassembler.seekpos < disassembler.romSize)
-	{
-		if (disassembler.GetInstruction().mOpcode == 0x0000)
-			break;
-	}
 
 	return 0;
 }
