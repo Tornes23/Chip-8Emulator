@@ -10,12 +10,12 @@
 #undef main
 int main(void)
 {
-	/*
 	Utils::InitSDL();
-	Window.Create();
+	Window.Create(glm::ivec2{Chip8::WIDTH * 5, Chip8::HEIGHT * 5});
 	Utils::InitGL();
 	InputManager.Initialize();
 	Editor.Initialize();
+	Chip8 Emulator;
 
 	while (!Window.IsClosed())
 	{
@@ -35,7 +35,6 @@ int main(void)
 	Window.ShutDown();
 	Editor.ShutDown();
 	SDL_Quit();
-	*/
 
 	std::ifstream f;
 	f.open("test_opcode.ch8", std::ios::binary | std::ios::in);
