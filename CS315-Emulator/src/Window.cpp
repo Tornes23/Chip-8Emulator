@@ -1,4 +1,5 @@
 #include <iostream>
+#include <imgui/imgui.h>
 #include "gl/glew.h"
 #include "Window.h"
 #include "Input.h"
@@ -34,7 +35,7 @@ void WindowClass::Create(glm::ivec2 size, std::string title)
 	}
 }
 
-void WindowClass::Update() { if (KeyDown(Key::Esc)) mClosed = true; }
+void WindowClass::Update() { if (KeyDown(Key::Esc)) mClosed = true; Editor(); }
 
 void WindowClass::Clear()
 {
@@ -56,6 +57,11 @@ void WindowClass::SwapBuffers()
 	SDL_GL_SetSwapInterval(0);
 	//swapping the front and back buffers
 	SDL_GL_SwapWindow(mWindow);
+}
+
+void WindowClass::Editor()
+{
+	//here will be the Imgui Code & functions will be either on system or Editor
 }
 
 void WindowClass::CloseWindow() { mClosed = true; }
