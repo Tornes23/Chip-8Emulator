@@ -33,17 +33,18 @@ private:
 
 	void SYS(short addr);
 	void CLS();
-	void RET();
+	void RET();//to do
 	void JP(short addr);
-	void JP(char v0, short addr);
-	void CALL(short addr);
+	void JP(char v0, short addr);//to do
+	void CALL(short addr);//to do
+	void DRW(char vX, char vY, short size);//to do
 
-	void SE(char v, char k);
-	void SE(char v0, char v1);
-	void SNE(char v, char k);
-	void SNE(char v0, char v1);
-	void SKP(char v);
-	void SKNP(char v);
+	void SE(char v, char k);//to do
+	void SE(char v0, char v1);//to do
+	void SNE(char v, char k);//to do
+	void SNE(char v0, char v1);//to do
+	void SKP(char v);//to do
+	void SKNP(char v);//to do
 
 	void LD(char v, char val);
 	void LD(char srcV, char dstV);
@@ -52,10 +53,10 @@ private:
 	void LDVK(char v, char key);
 	void LDDTV(char v);
 	void LDSTV(char v);
-	void LDFV(char v);
-	void LDBV(char v);
-	void LDIV(char v);
-	void LDVI(char v);
+	void LDFV(char v);//to do
+	void LDBV(char v);//to do
+	void LDIV(char v);//to do
+	void LDVI(char v);//to do
 
 	void OR(char srcV, char dstV);
 	void AND(char srcV, char dstV);
@@ -63,12 +64,11 @@ private:
 
 	void ADD(char v, short val);
 	void ADD(char srcV, char dstV);
-	void ADDI(char v);
+	void ADDI(char v);//to do
 	void SUB(char srcV, char dstV);
 	void SUBN(char srcV, char dstV);
+	void RND(char v, short val);//to do
 
-	void RND(char v, short val);
-	void DRW(char vX, char vY, short size);
 
 	void SHR(char srcV, char dstV);
 	void SHL(char srcV, char dstV);

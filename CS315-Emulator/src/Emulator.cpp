@@ -40,19 +40,32 @@ void Chip8::DRW(char vX, char vY, short size)
 #pragma region INSTRUCTION FUNCTIONS
 void Chip8::SE(char v, char k)
 {
+	if (mV[v] == k)
+	{
+
+	}
 }
 
 void Chip8::SE(char v0, char v1)
 {
+	if (mV[v0] == mV[v1])
+	{
 
+	}
 }
 void Chip8::SNE(char v, char k)
 {
+	if (mV[v] != k)
+	{
 
+	}
 }
 void Chip8::SNE(char v0, char v1)
 {
+	if (mV[v0] != mV[v0])
+	{
 
+	}
 }
 void Chip8::SKP(char v)
 {
@@ -137,7 +150,7 @@ void Chip8::ADD(char v, short val)
 	else
 		mV[15] = 0;
 	//getting the lowest 8 bits of the short
-	mV[v] = result & 0xFF;
+	mV[v] = result & 0x00FF;
 	
 }
 void Chip8::ADD(char srcV, char dstV)
@@ -149,7 +162,7 @@ void Chip8::ADD(char srcV, char dstV)
 	else
 		mV[15] = 0;
 	//getting the lowest 8 bits of the short
-	mV[dstV] = result & 0xFF;
+	mV[dstV] = result & 0x00FF;
 }
 void Chip8::ADDI(char v)
 {
