@@ -11,12 +11,12 @@
 int main(void)
 {
 	Disassembler disassembler;
-	/*
 	Utils::InitSDL();
-	Window.Create();
+	Window.Create(glm::ivec2{Chip8::WIDTH * 5, Chip8::HEIGHT * 5});
 	Utils::InitGL();
 	InputManager.Initialize();
 	Editor.Initialize();
+	Chip8 Emulator;
 
 	while (!Window.IsClosed())
 	{
@@ -36,7 +36,6 @@ int main(void)
 	Window.ShutDown();
 	Editor.ShutDown();
 	SDL_Quit();
-	*/
 
 	if (disassembler.LoadRom("test_opcode.ch8") < 0)
 		return -1;

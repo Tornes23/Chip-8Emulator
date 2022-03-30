@@ -1,27 +1,34 @@
 #pragma once
 #include <map>
 #include "Disassembler.h"
+#include <array>
 
 class Chip8
 {
 public:
 	//Singleton stuff
+	Chip8()
+		: mRAM{}
+		, mStack{}
+		, mV{}
+		, mFrameBuffer { {} }
+	{}
+
 	Chip8(Chip8 const&) = delete;
 	void operator=(Chip8 const&) = delete;
-	static Chip8& GetInstance()
-	{
-		static Chip8 instance;
-		return instance;
-	}
 
 	void Update();
 	void Render();
 
-private:
+	static const unsigned MEMORYSIZE = 4096;
+	static const unsigned STACKSIZE = 32;
+	static const unsigned WIDTH = 64;
+	static const unsigned HEIGHT = 32;
 
+private:
 	Disassembler mDisassembler;
-	unsigned char mRAM[4096];
-	unsigned short mStack[32];
+	unsigned char mRAM[MEMORYSIZE];
+	unsigned short mStack[STACKSIZE];
 	
 	unsigned char mV[16];
 	unsigned short mPC = 0x200;//starting address
@@ -31,7 +38,7 @@ private:
 	unsigned char mDT = 0;
 	unsigned char mST = 0;
 
-	bool mFrameBuffer[64][32];
+	std::array<std::array<bool, WIDTH>, HEIGHT> mFrameBuffer;
 
 	void SYS(short addr);
 	void CLS();
@@ -75,9 +82,4 @@ private:
 	void SHR(char srcV, char dstV);
 	void SHL(char srcV, char dstV);
 
-
-	Chip8() {}
 };
-
-
-#define Emulator (Chip8::GetInstance())

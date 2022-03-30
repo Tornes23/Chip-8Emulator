@@ -22,6 +22,7 @@ public:
 	void Clear();
 	void ShutDown();
 	void SwapBuffers();
+	void Editor();
 	//setters
 	void CloseWindow();
 	//getters
