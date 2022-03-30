@@ -1,13 +1,19 @@
 #include <memory>
 #include "Emulator.h"
+#include "Disassembler.h"
 
 void Chip8::Update()
 {
 	//get Opcode, update stack and shit
+	mDisassembler.GetInstruction();
+	mPC += 2;
 
-	//based on Opcode
+	if (mDT > 0)
+		mDT--;
+	if (mST > 0)
+		mST--;
 
-	//if Opcode display update texture
+
 }
 
 #pragma region SYSTEM FUNCTIONS
@@ -38,7 +44,7 @@ void Chip8::DRW(char vX, char vY, short size)
 #pragma endregion
 
 #pragma region INSTRUCTION FUNCTIONS
-void Chip8::SE(char v, char k)
+void Chip8::SE_VAL(char v, char k)
 {
 	if (mV[v] == k)
 	{
@@ -46,21 +52,21 @@ void Chip8::SE(char v, char k)
 	}
 }
 
-void Chip8::SE(char v0, char v1)
+void Chip8::SE_RGSTR(char v0, char v1)
 {
 	if (mV[v0] == mV[v1])
 	{
 
 	}
 }
-void Chip8::SNE(char v, char k)
+void Chip8::SNE_VAL(char v, char k)
 {
 	if (mV[v] != k)
 	{
 
 	}
 }
-void Chip8::SNE(char v0, char v1)
+void Chip8::SNE_RGSTR(char v0, char v1)
 {
 	if (mV[v0] != mV[v0])
 	{
@@ -78,11 +84,11 @@ void Chip8::SKNP(char v)
 #pragma endregion
 
 #pragma region LOAD FUNCTIONS
-void Chip8::LD(char v, char val)
+void Chip8::LD_VAL(char v, char val)
 {
 	mV[v] = val;
 }
-void Chip8::LD(char srcV, char dstV)
+void Chip8::LD_RGSTR(char srcV, char dstV)
 {
 	mV[dstV] = mV[srcV];
 }

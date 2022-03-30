@@ -1,5 +1,6 @@
 #pragma once
-
+#include <map>
+#include "Disassembler.h"
 
 class Chip8
 {
@@ -18,11 +19,12 @@ public:
 
 private:
 
+	Disassembler mDisassembler;
 	unsigned char mRAM[4096];
 	unsigned short mStack[32];
 	
 	unsigned char mV[16];
-	unsigned short mPC = 0;
+	unsigned short mPC = 0x200;//starting address
 	unsigned short mI = 0;
 	unsigned short mSP = 0;
 
@@ -39,15 +41,15 @@ private:
 	void CALL(short addr);//to do
 	void DRW(char vX, char vY, short size);//to do
 
-	void SE(char v, char k);//to do
-	void SE(char v0, char v1);//to do
-	void SNE(char v, char k);//to do
-	void SNE(char v0, char v1);//to do
+	void SE_VAL(char v, char k);//to do
+	void SE_RGSTR(char v0, char v1);//to do
+	void SNE_VAL(char v, char k);//to do
+	void SNE_RGSTR(char v0, char v1);//to do
 	void SKP(char v);//to do
 	void SKNP(char v);//to do
 
-	void LD(char v, char val);
-	void LD(char srcV, char dstV);
+	void LD_VAL(char v, char val);
+	void LD_RGSTR(char srcV, char dstV);
 	void LDIN(unsigned short addr);
 	void LDVDT(char v);
 	void LDVK(char v, char key);

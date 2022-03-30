@@ -1,10 +1,13 @@
 #pragma once
 #include <fstream>
 
-namespace Disassembler
+struct Disassembler
 {
 	void PrintOpcode(uint16_t opcode);
-
+	int LoadRom(std::string rom);
+	std::ifstream rom;
+	int seekpos = 0;
+	int romSize = 0;
 	struct Opcode
 	{
 		Opcode(uint16_t code = 0);
@@ -16,4 +19,6 @@ namespace Disassembler
 		uint16_t GetMemory() const;
 		uint16_t GetCount() const;
 	};
-}
+
+	Opcode GetInstruction();
+};
