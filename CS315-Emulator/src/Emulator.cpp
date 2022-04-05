@@ -1,4 +1,5 @@
 #include <memory>
+#include "Input.h"
 #include "Emulator.h"
 #include "Disassembler.h"
 
@@ -12,7 +13,7 @@ int Chip8::LoadRom(std::string rom)
 
 void Chip8::Update()
 {
-	//get Opcode, update stack and shit
+	//get Opcode, update stack
 	Opcode operation = mDisassembler.GetInstruction();
 	mPC += 2;
 
@@ -22,13 +23,18 @@ void Chip8::Update()
 		mDT--;
 	if (mST > 0)
 		mST--;
-
-
 }
 
 void Chip8::HandleOpcode(const Opcode& op)
 {
 	unsigned short first = op.mOpcode & 0xF000;
+	uint16_t src = op.GetSrcRegister();
+	uint16_t dst = op.GetDestRegister();
+	uint16_t mem = op.GetMemory();
+	uint16_t val = op.GetValue();
+	uint16_t last = op.GetCount();
+	mPC += 2;
+
 	switch (first)
 	{
 		case 0x0:
@@ -41,38 +47,38 @@ void Chip8::HandleOpcode(const Opcode& op)
 		}
 		case 0x1:// JP NNN
 		{
-			JP(op.GetMemory());
+			JP(mem);
 			break;
 		}
 		case 0x2:// CALL NNN
 		{
-			CALL(op.GetMemory());
+			CALL(mem);
 			break;
 		}
 		case 0x3://SE VX KK
 		{
-			SE_VAL(op.GetSrcRegister(), op.GetValue());
+			SE_VAL(src, val);
 			break;
 		}
 		case 0x4://SNE VX KK
 		{
-			SNE_VAL(op.GetSrcRegister(), op.GetValue());
+			SNE_VAL(src, val);
 			break;
 		}
 		case 0x5:
 		{
 			if (op.GetCount() == 0)//SE VX VY
-				SE_RGSTR(op.GetSrcRegister(), op.GetDestRegister());
+				SE_RGSTR(src, dst);
 			break;
 		}
 		case 0x6://LD VX KK
 		{
-			LD_VAL(op.GetSrcRegister(), op.GetValue());
+			LD_VAL(src, val);
 			break;
 		}
 		case 0x7://ADD VX KK
 		{
-			ADD_VAL(op.GetSrcRegister(), op.GetValue());
+			ADD_VAL(src, val);
 			break;
 		}
 		case 0x8:
@@ -82,38 +88,35 @@ void Chip8::HandleOpcode(const Opcode& op)
 		}
 		case 0x9://SNE VX VY
 		{
-			SNE_RGSTR(op.GetSrcRegister(), op.GetDestRegister());
+			SNE_RGSTR(src, dst);
 			break;
 		}
 		case 0xA://LD I NNN
 		{
-			LDIN(op.GetMemory());
+			LDIN(mem);
 			break;
 		}
 		case 0xB://JP V0 NNN
 		{
-			JPV0(op.GetMemory());
+			JPV0(mem);
 			break;
 		}
 		case 0xC://RND VX KK
 		{
-			RND(op.GetSrcRegister(), op.GetValue());
+			RND(src, val);
 			break;
 		}
 		case 0xD://DRW VX VY N
 		{
-			DRW(op.GetSrcRegister(), op.GetDestRegister(), op.GetCount());
+			DRW(src, dst, last);
 			break;
 		}
 		case 0xE://
 		{
-			short val = op.GetValue();
-			short src = op.GetSrcRegister();
-
 			if (val == 0x9E)//SKP VX
-				SKP(op.GetSrcRegister());
+				SKP(src);
 			else if (val == 0xA1)//SKNP VX
-				SKNP(op.GetSrcRegister());
+				SKNP(src);
 
 			break;
 		}
@@ -127,90 +130,126 @@ void Chip8::HandleOpcode(const Opcode& op)
 
 void Chip8::Ox8(const Opcode& op)
 {
+	uint16_t src = op.GetSrcRegister();
+	uint16_t dst = op.GetDestRegister();
+	uint16_t mem = op.GetMemory();
+	uint16_t val = op.GetValue();
 	uint16_t last = op.GetCount();
 
 	switch (last)
 	{
-	case 0x0://LD VX VY
-	{
-		std::cout << "LD V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
-		break;
+		case 0x0://LD VX VY
+		{
+			LD_RGSTR(src, dst);
+			break;
+		}
+		case 0x1://OR VX VY
+		{
+			OR(src, dst);
+			break;
+		}
+		case 0x2://AND VX VY
+		{
+			AND(src, dst);
+			break;
+		}
+		case 0x3://XOR VX VY
+		{
+			XOR(src, dst);
+			break;
+		}
+		case 0x4://ADD VX VY
+		{
+			ADD_RGSTR(src, dst);
+			break;
+		}
+		case 0x5://SUB VX VY
+		{
+			SUB(src, dst);
+			break;
+		}
+		case 0x6://SHR VX VY
+		{
+			SHR(src, dst);
+			break;
+		}
+		case 0x7://SUBN VX VY
+		{
+			SUBN(src, dst);
+			break;
+		}
+		case 0xE://SHL VX VY
+		{
+			SHL(src, dst);
+			break;
+		}
+		default:
+		{
+			break;
+		}
 	}
-	case 0x1:
-	{
-		std::cout << "OR V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
-		break;
-	}
-	case 0x2:
-	{
-		std::cout << "AND V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
-		break;
-	}
-	case 0x3:
-	{
-		std::cout << "XOR V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
-		break;
-	}
-	case 0x4:
-	{
-		std::cout << "ADD V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
-		break;
-	}
-	case 0x5:
-	{
-		std::cout << "SUB V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
-		break;
-	}
-	case 0x6:
-	{
-		std::cout << "SHR V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
-		break;
-	}
-	case 0x7:
-	{
-		std::cout << "SUBN V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
-		break;
-	}
-	case 0xE:
-	{
-		std::cout << "SHL V" << std::hex << op.GetSrcRegister() << " V" << std::hex << op.GetDestRegister();
-		break;
-	}
-	default:
-	{
-		std::cout << "UNKN";
-		break;
-	}
-	}
-	break;
 }
 
 void Chip8::OxF(const Opcode& op)
 {
-	short val = op.GetValue();
-	short src = op.GetSrcRegister();
+	uint16_t src = op.GetSrcRegister();
+	uint16_t dst = op.GetDestRegister();
+	uint16_t mem = op.GetMemory();
+	uint16_t val = op.GetValue();
+	uint16_t last = op.GetCount();
 
-	if (val == 0x07)
-		std::cout << "LD V" << std::hex << src << "DT";
-	else if (val == 0x0a)
-		std::cout << "LD V" << std::hex << src << "K";
-	else if (val == 0x15)
-		std::cout << "LD DT" << " V" << std::hex << src;
-	else if (val == 0x18)
-		std::cout << "LD ST" << " V" << std::hex << src;
-	else if (val == 0x1e)
-		std::cout << "ADD I" << " V" << std::hex << src;
-	else if (val == 0x29)
-		std::cout << "LD F" << " V" << std::hex << src;
-	else if (val == 0x33)
-		std::cout << "LD B" << " V" << std::hex << src;
-	else if (val == 0x55)
-		std::cout << "LD I" << " V" << std::hex << src;
-	else if (val == 0x65)
-		std::cout << "LD V" << std::hex << src << " I";
-	else
-		std::cout << "UNKN";
-
+	switch (last)
+	{
+		case 0x07://LD VX DT
+		{
+			LDVDT(src);
+			break;
+		}
+		case 0x0A://LD VX K
+		{
+			LDVK(src, val);
+			break;
+		}
+		case 0x15://LD DT VX
+		{
+			LDDTV(src);
+			break;
+		}
+		case 0x18://LD ST VX
+		{
+			LDSTV(src);
+			break;
+		}
+		case 0x1E://ADD I VX
+		{
+			ADDI(src);
+			break;
+		}
+		case 0x29://LD F VX
+		{
+			LDFV(src);
+			break;
+		}
+		case 0x33://LD B VX
+		{
+			LDBV(src);
+			break;
+		}
+		case 0x55://LD I VX
+		{
+			LDIV(src);
+			break;
+		}
+		case 0x65://LD VX I
+		{
+			LDVI(src);
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
 }
 
 #pragma region SYSTEM FUNCTIONS
@@ -220,21 +259,32 @@ void Chip8::CLS()
 }
 void Chip8::RET()
 {
+	mSP--;//decrease stack pointer
+	mPC = mStack[mSP];//update the program counter to the correct address
+	mPC += 2;//moving the program counter
 }
 
-void Chip8::JP(short addr)
+void Chip8::JP(unsigned short addr)
 {
+	mPC = addr;
+	mPC -= 2;
 }
 
-void Chip8::JP(char v0, short addr)
+void Chip8::JPV0(unsigned short addr)
 {
+	mPC = mV[0] + addr;
+	mPC -= 2;
 }
 
-void Chip8::CALL(short addr)
+void Chip8::CALL(unsigned short addr)
 {
+	mStack[mSP] = mPC;//storing the current program counter address
+	mSP++;//increment the stack pointer
+	mPC = addr;//setting the program counter address
+	mPC -= 2;
 }
 
-void Chip8::DRW(char vX, char vY, short size)
+void Chip8::DRW(char vX, char vY, unsigned short size)
 {
 
 }
@@ -244,39 +294,45 @@ void Chip8::DRW(char vX, char vY, short size)
 void Chip8::SE_VAL(char v, char k)
 {
 	if (mV[v] == k)
-	{
-
-	}
+		mPC += 4;//addign 4 to skip next instruction
+	else
+		mPC += 2;//regular update of the program counter
 }
 
 void Chip8::SE_RGSTR(char v0, char v1)
 {
 	if (mV[v0] == mV[v1])
-	{
-
-	}
+		mPC += 4;//addign 4 to skip next instruction
+	else
+		mPC += 2;//regular update of the program counter
 }
 void Chip8::SNE_VAL(char v, char k)
 {
 	if (mV[v] != k)
-	{
-
-	}
+		mPC += 4;//addign 4 to skip next instruction
+	else
+		mPC += 2;//regular update of the program counter
 }
 void Chip8::SNE_RGSTR(char v0, char v1)
 {
 	if (mV[v0] != mV[v0])
-	{
-
-	}
+		mPC += 4;//addign 4 to skip next instruction
+	else
+		mPC += 2;//regular update of the program counter
 }
 void Chip8::SKP(char v)
 {
-
+	if(KeyDown((Key)mV[v]))
+		mPC += 4;//addign 4 to skip next instruction
+	else
+		mPC += 2;//regular update of the program counter
 }
 void Chip8::SKNP(char v)
 {
-
+	if (!KeyDown((Key)mV[v]))
+		mPC += 4;//addign 4 to skip next instruction
+	else
+		mPC += 2;//regular update of the program counter
 }
 #pragma endregion
 
@@ -297,9 +353,11 @@ void Chip8::LDVDT(char v)
 {
 	mV[v] = mDT;
 }
-void Chip8::LDVK(char v, char key)
+void Chip8::LDVK(char v)
 {
-	mV[v] = key;
+	//check if any of the input jeys pressed
+		//if pressed store the value in mV[v]
+
 }
 void Chip8::LDDTV(char v)
 {
@@ -311,7 +369,7 @@ void Chip8::LDSTV(char v)
 }
 void Chip8::LDFV(char v)
 {
-
+	mI = mV[v];
 }
 void Chip8::LDBV(char v)
 {
@@ -319,11 +377,17 @@ void Chip8::LDBV(char v)
 }
 void Chip8::LDIV(char v)
 {
+	for (char i = 0; i < v; i++)
+		mRAM[mI + i] = mV[i];//storing the states of the resgisters at address I
 
+	mI += v + 1;
 }
 void Chip8::LDVI(char v)
 {
+	for (char i = 0; i < v; i++)
+		mV[i] = mRAM[mI + i];//loading the states of the resgisters at address I
 
+	mI += v + 1;
 }
 #pragma endregion
 
@@ -344,7 +408,7 @@ void Chip8::XOR(char srcV, char dstV)
 
 #pragma region ARITHMETIC FUNCTIONS
 
-void Chip8::ADD(char v, short val)
+void Chip8::ADD_VAL(char v, char val)
 {
 	unsigned short result = mV[v] + val;
 	//check if overflow
@@ -356,7 +420,7 @@ void Chip8::ADD(char v, short val)
 	mV[v] = result & 0x00FF;
 	
 }
-void Chip8::ADD(char srcV, char dstV)
+void Chip8::ADD_RGSTR(char srcV, char dstV)
 {
 	unsigned short result = mV[dstV] + mV[srcV];
 	//check if overflow
@@ -369,7 +433,14 @@ void Chip8::ADD(char srcV, char dstV)
 }
 void Chip8::ADDI(char v)
 {
-
+	unsigned short result = mV[v] + mI;
+	//check if overflow
+	if (result > 255)
+		mV[15] = 1;
+	else
+		mV[15] = 0;
+	//getting the lowest 8 bits of the short
+	mI = result & 0x00FF;
 }
 void Chip8::SUB(char srcV, char dstV)
 {
@@ -390,9 +461,9 @@ void Chip8::SUBN(char srcV, char dstV)
 
 	mV[dstV] = mV[srcV] - mV[dstV];
 }
-void Chip8::RND(char v, short val)
+void Chip8::RND(char v, char val)
 {
-
+	mV[v] = ((char)std::rand()) & val;
 }
 #pragma endregion
 

@@ -239,7 +239,7 @@ int Disassembler::LoadRom(std::string file)
 		return -1;
 
 	rom.seekg(0, rom.end);
-	romSize = rom.tellg();
+	romSize = (int)rom.tellg();
 	rom.seekg(0, rom.beg);
 
 	return 0;
@@ -265,32 +265,32 @@ Opcode Disassembler::GetInstruction()
 	return Opcode(opcode);
 }
 
-Disassembler::Opcode::Opcode(uint16_t code)
+Opcode::Opcode(uint16_t code)
 	: mOpcode(code)
 {
 }
 
-uint16_t Disassembler::Opcode::GetSrcRegister() const
+uint8_t Opcode::GetSrcRegister() const
 {
 	return Utils::GetBits(mOpcode, 1);
 }
 
-uint16_t Disassembler::Opcode::GetDestRegister() const
+uint8_t Opcode::GetDestRegister() const
 {
 	return Utils::GetBits(mOpcode, 2);
 }
 
-uint16_t Disassembler::Opcode::GetValue() const
+uint8_t Opcode::GetValue() const
 {
 	return Utils::GetBits(mOpcode, 2, 2);
 }
 
-uint16_t Disassembler::Opcode::GetMemory() const
+uint16_t Opcode::GetMemory() const
 {
-	return Utils::GetBits(mOpcode, 1, 3);
+	return Utils::GetMem(mOpcode, 1, 3);
 }
 
-uint16_t Disassembler::Opcode::GetCount() const
+uint8_t Opcode::GetCount() const
 {
 	return Utils::GetBits(mOpcode, 3);
 }

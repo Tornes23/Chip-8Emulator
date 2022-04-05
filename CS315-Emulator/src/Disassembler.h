@@ -6,11 +6,11 @@ struct Opcode
 	Opcode(uint16_t code = 0);
 
 	uint16_t mOpcode;
-	uint16_t GetSrcRegister() const;
-	uint16_t GetDestRegister() const;
-	uint16_t GetValue() const;
+	uint8_t GetSrcRegister() const;
+	uint8_t GetDestRegister() const;
+	uint8_t GetValue() const;
 	uint16_t GetMemory() const;
-	uint16_t GetCount() const;
+	uint8_t GetCount() const;
 };
 
 struct Disassembler
