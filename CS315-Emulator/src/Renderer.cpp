@@ -88,8 +88,6 @@ void Renderer::update(std::array<std::array<bool, Chip8::WIDTH>, Chip8::HEIGHT>&
 	}
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, &m_pixels[0]);
-	m_program.Use();
-	m_program.SetIntUniform("ourTexture", 0);
 }
 
 void Renderer::render()
