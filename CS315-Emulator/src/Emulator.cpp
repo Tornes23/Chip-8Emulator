@@ -326,14 +326,14 @@ void Chip8::SNE_RGSTR(char v0, char v1)
 #pragma region INSTRUCTION FUNCTIONS
 void Chip8::SKP(char v)
 {
-	if(KeyDown((Key)mV[v]))
+	if(KeyDown(mInputKeys[mV[v]]))
 		mPC += 4;//addign 4 to skip next instruction
 	else
 		mPC += 2;//regular update of the program counter
 }
 void Chip8::SKNP(char v)
 {
-	if (!KeyDown((Key)mV[v]))
+	if (!KeyDown(mInputKeys[mV[v]]))
 		mPC += 4;//addign 4 to skip next instruction
 	else
 		mPC += 2;//regular update of the program counter
@@ -358,7 +358,15 @@ void Chip8::LDVDT(char v)
 void Chip8::LDVK(char v)
 {
 	//check if any of the input jeys pressed
+	for (unsigned short i = 0; i < 16; i++)
+	{
 		//if pressed store the value in mV[v]
+		if (KeyDown(mInputKeys[i]))
+		{
+			mV[v] = (unsigned char)i;
+			break;
+		}
+	}
 
 }
 void Chip8::LDDTV(char v)

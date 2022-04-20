@@ -1,7 +1,8 @@
 #pragma once
 #include <map>
-#include "Disassembler.h"
 #include <array>
+#include "Disassembler.h"
+#include "Input.h"
 
 class Chip8
 {
@@ -12,6 +13,12 @@ public:
 		, mStack{}
 		, mV{}
 		, mFrameBuffer { {} }
+		, mInputKeys { Key::Num1, Key::Num2, Key::Num3, Key::Num4,
+					   Key::Q,    Key::W,    Key::E,    Key::R,
+					   Key::A,    Key::S,    Key::D,    Key::F,
+					   Key::Z,    Key::X,    Key::C,    Key::V,
+					 }
+
 	{ std::srand((unsigned int)std::time(nullptr)); }
 
 	int LoadRom(std::string rom = "test_opcode.ch8");
@@ -29,6 +36,7 @@ public:
 	static const unsigned HEIGHT = 32u;
 
 	std::array<std::array<bool, WIDTH>, HEIGHT> mFrameBuffer;
+	std::array<Key, 16> mInputKeys;
 
 
 private:
@@ -49,20 +57,20 @@ private:
 	void JP(unsigned short addr);
 	void JPV0(unsigned short addr);
 	void CALL(unsigned short addr);
-	void DRW(char vX, char vY, unsigned short size);//to do
+	void DRW(char vX, char vY, unsigned short size);//to do - to pa ti Martin juapo
 
 	void SE_VAL(char v, char k);
 	void SE_RGSTR(char v0, char v1);
 	void SNE_VAL(char v, char k);
 	void SNE_RGSTR(char v0, char v1);
-	void SKP(char v); //probably wrong need to revisit
-	void SKNP(char v);//probably wrong need to revisit
+	void SKP(char v); 
+	void SKNP(char v);
 
 	void LD_VAL(char v, char val);
 	void LD_RGSTR(char srcV, char dstV);
 	void LDIN(unsigned short addr);
 	void LDVDT(char v);
-	void LDVK(char v);//to do
+	void LDVK(char v);
 	void LDDTV(char v);
 	void LDSTV(char v);
 	void LDFV(char v);//to do
