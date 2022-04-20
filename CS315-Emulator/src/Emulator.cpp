@@ -8,6 +8,27 @@ int Chip8::LoadRom(std::string rom)
 	if (mDisassembler.LoadRom(rom) < 0)
 		return -1;
 
+	char mFonts[16][5] = { { (char)0xF0, (char)0x90, (char)0x90, (char)0x90, (char)0xF0 },
+						   { (char)0x20, (char)0x60, (char)0x20, (char)0x20, (char)0x70 },
+						   { (char)0xF0, (char)0x10, (char)0xF0, (char)0x80, (char)0xF0 },
+						   { (char)0xF0, (char)0x10, (char)0xF0, (char)0x10, (char)0xF0 },
+						   { (char)0x90, (char)0x90, (char)0xF0, (char)0x10, (char)0x10 },
+						   { (char)0xF0, (char)0x80, (char)0xF0, (char)0x10, (char)0xF0 },
+						   { (char)0xF0, (char)0x80, (char)0xF0, (char)0x90, (char)0xF0 },
+						   { (char)0xF0, (char)0x10, (char)0x20, (char)0x40, (char)0x40 },
+						   { (char)0xF0, (char)0x90, (char)0xF0, (char)0x90, (char)0xF0 },
+						   { (char)0xF0, (char)0x90, (char)0xF0, (char)0x10, (char)0xF0 },
+						   { (char)0xF0, (char)0x90, (char)0xF0, (char)0x90, (char)0x90 },
+						   { (char)0xE0, (char)0x90, (char)0xE0, (char)0x90, (char)0xE0 },
+						   { (char)0xF0, (char)0x80, (char)0x80, (char)0x80, (char)0xF0 },
+						   { (char)0xE0, (char)0x90, (char)0x90, (char)0x90, (char)0xE0 },
+						   { (char)0xF0, (char)0x80, (char)0xF0, (char)0x80, (char)0xF0 },
+						   { (char)0xF0, (char)0x80, (char)0xF0, (char)0x80, (char)0x80 } 
+						 };
+
+	std::memcpy(&mRAM[0x0], &mFonts[0x0], 16 * 5);
+
+
 	return 0;
 }
 
@@ -340,9 +361,11 @@ void Chip8::SKNP(char v)
 }
 void Chip8::LD_VAL(char v, char val)
 {
+	mV[v] = val;
 }
 void Chip8::LD_RGSTR(char srcV, char dstV)
 {
+	mV[dstV] = mV[srcV];
 }
 #pragma endregion
 
@@ -379,10 +402,17 @@ void Chip8::LDSTV(char v)
 }
 void Chip8::LDFV(char v)
 {
-	mI = mV[v];
+	mI = mRAM[mV[v] * 5];
 }
 void Chip8::LDBV(char v)
 {
+	unsigned char hundreds = mV[v] / 100;
+	unsigned char decimals = (mV[v] % 100) / 10;
+	unsigned char units = (mV[v] % 100) % 10;
+
+	mRAM[mI] = hundreds;
+	mRAM[mI + 1] = decimals;
+	mRAM[mI + 2] = units;
 
 }
 void Chip8::LDIV(char v)

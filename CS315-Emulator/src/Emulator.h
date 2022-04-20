@@ -57,7 +57,7 @@ private:
 	void JP(unsigned short addr);
 	void JPV0(unsigned short addr);
 	void CALL(unsigned short addr);
-	void DRW(char vX, char vY, unsigned short size);//to do - to pa ti Martin juapo
+	void DRW(char vX, char vY, unsigned short size);//to do pa ti Martin juapo
 
 	void SE_VAL(char v, char k);
 	void SE_RGSTR(char v0, char v1);
@@ -73,8 +73,8 @@ private:
 	void LDVK(char v);
 	void LDDTV(char v);
 	void LDSTV(char v);
-	void LDFV(char v);//to do
-	void LDBV(char v);//to do
+	void LDFV(char v);
+	void LDBV(char v);
 	void LDIV(char v);
 	void LDVI(char v);
 
