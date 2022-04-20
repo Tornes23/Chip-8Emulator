@@ -166,7 +166,7 @@ namespace Utils
             std::cout << id << ":" << _type << " of " << _severity << " severity, raised from " << _source << ": " << message << "\n";
     }
 
-    uint16_t GetBits(uint16_t buf_big_endian, int start, int count)
+    uint16_t GetMem(uint16_t buf_big_endian, int start, int count)
     {
         constexpr int opcode_size = 4;
 
@@ -175,6 +175,17 @@ namespace Utils
         buf_big_endian <<= (start * opcode_size);
         buf_big_endian >>= (opcode_size * (opcode_size - count));
         return buf_big_endian;
+    }
+
+    uint8_t GetBits(uint16_t buf_big_endian, int start, int count)
+    {
+        constexpr int opcode_size = 4;
+
+        if (count <= 0 || start + count > opcode_size)
+            return 0;
+        buf_big_endian <<= (start * opcode_size);
+        buf_big_endian >>= (opcode_size * (opcode_size - count));
+        return (uint8_t)buf_big_endian;
     }
    
 }

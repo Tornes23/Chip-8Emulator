@@ -1,6 +1,7 @@
 #include "Disassembler.h"
 #include "Utils.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 
 void Disassembler::PrintOpcode(uint16_t opcode)
@@ -231,32 +232,65 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 	}
 }
 
-Disassembler::Opcode::Opcode(uint16_t code)
+int Disassembler::LoadRom(std::string file)
+{
+	rom.open(file, std::ios::binary | std::ios::in);
+	if (rom.bad())
+		return -1;
+
+	rom.seekg(0, rom.end);
+	romSize = (int)rom.tellg();
+	rom.seekg(0, rom.beg);
+
+	return 0;
+}
+
+Opcode Disassembler::GetInstruction()
+{
+	if (seekpos > romSize)
+		return Opcode(0x000);
+
+	char buf[2];
+
+	rom.read(buf, 2);
+	std::swap(buf[0], buf[1]); // little endian conversor
+	uint16_t opcode = *reinterpret_cast<uint16_t*>(buf);
+
+	std::cout << std::hex << seekpos << ": ";
+	Disassembler::PrintOpcode(opcode);
+	std::cout << std::endl;
+
+	seekpos += 2;
+
+	return Opcode(opcode);
+}
+
+Opcode::Opcode(uint16_t code)
 	: mOpcode(code)
 {
 }
 
-uint16_t Disassembler::Opcode::GetSrcRegister() const
+uint8_t Opcode::GetSrcRegister() const
 {
 	return Utils::GetBits(mOpcode, 1);
 }
 
-uint16_t Disassembler::Opcode::GetDestRegister() const
+uint8_t Opcode::GetDestRegister() const
 {
 	return Utils::GetBits(mOpcode, 2);
 }
 
-uint16_t Disassembler::Opcode::GetValue() const
+uint8_t Opcode::GetValue() const
 {
 	return Utils::GetBits(mOpcode, 2, 2);
 }
 
-uint16_t Disassembler::Opcode::GetMemory() const
+uint16_t Opcode::GetMemory() const
 {
-	return Utils::GetBits(mOpcode, 1, 3);
+	return Utils::GetMem(mOpcode, 1, 3);
 }
 
-uint16_t Disassembler::Opcode::GetCount() const
+uint8_t Opcode::GetCount() const
 {
 	return Utils::GetBits(mOpcode, 3);
 }
