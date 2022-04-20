@@ -21,17 +21,19 @@ namespace Utils
 
     void InitGL()
     {
-        //initializing the glew library
+
+        glewExperimental = true;
         if (glewInit() != GLEW_OK)
         {
             SDL_GL_DeleteContext(Window.GetSDLContext());
             SDL_DestroyWindow(Window.GetSDLWindow());
-            std::cerr << "GLEW Error: Failed to init" << "\n";
+            std::cout << "GLEW Error: Failed to init" << std::endl;
             SDL_Quit();
             exit(1);
         }
 
         glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_TEXTURE_2D);
         glDebugMessageCallback(Utils::MessageCallback, 0);
 
         //depth buffer
@@ -39,9 +41,9 @@ namespace Utils
         glDepthFunc(GL_LESS);
 
         //back face removal
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-        glFrontFace(GL_CCW);
+        //glEnable(GL_CULL_FACE);
+        //glCullFace(GL_BACK);
+        //glFrontFace(GL_CCW);
     }
 
     void ParseShader(std::string& filename, std::string& code)
@@ -160,8 +162,8 @@ namespace Utils
             break;
         }
 
-        if(severity != GL_DEBUG_SEVERITY_NOTIFICATION)
-            std::cerr << id << ":" << _type << " of " << _severity << " severity, raised from " << _source << ": " << message << "\n";
+       // if(severity != GL_DEBUG_SEVERITY_NOTIFICATION)
+            std::cout << id << ":" << _type << " of " << _severity << " severity, raised from " << _source << ": " << message << "\n";
     }
 
     uint16_t GetBits(uint16_t buf_big_endian, int start, int count)

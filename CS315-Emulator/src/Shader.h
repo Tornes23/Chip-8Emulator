@@ -2,8 +2,7 @@
 #include <string>
 #include "gl/glew.h"
 #include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
-#include "Color.h"
+#include <glm/vec4.hpp>"
 #include <glm/ext/vector_float2.hpp>
 
 class Shader
@@ -21,7 +20,7 @@ private:
 class ShaderProgram
 {
 public:
-	ShaderProgram(std::string vertex = "./data/shaders/Regular.vert", std::string fragment = "./data/shaders/Regular.frag", std::string geometry = "");
+	ShaderProgram(std::string vertex = "shader.vert", std::string fragment = "shader.frag", std::string geometry = "");
 	const GLuint GetHandle() const;
 	void Create();
 	void Free();
@@ -34,7 +33,7 @@ public:
 	void SetVec2Uniform(const std::string& name, glm::vec2 values);
 	void SetVec3Uniform(const std::string& name, glm::vec3 values);
 	void SetVec4Uniform(const std::string& name, glm::vec4 values);
-	void SetColorUniform(const std::string& name, Color c);
+	void SetColorUniform(const std::string& name, glm::vec4 c);
 
 	void Use();
 

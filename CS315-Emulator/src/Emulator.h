@@ -1,25 +1,35 @@
 #pragma once
-
+#include <array>
 
 class Chip8
 {
 public:
 	//Singleton stuff
+	Chip8()
+		: mRAM{}
+		, mStack{}
+		, mV{}
+		, mFrameBuffer { {} }
+	{}
+
 	Chip8(Chip8 const&) = delete;
 	void operator=(Chip8 const&) = delete;
-	static Chip8& GetInstance()
-	{
-		static Chip8 instance;
-		return instance;
-	}
 
 	void Update();
 	void Render();
 
+	static const unsigned MEMORYSIZE = 4096;
+	static const unsigned STACKSIZE = 32;
+	static const unsigned WIDTH = 64;
+	static const unsigned HEIGHT = 32;
+
+	std::array<std::array<bool, WIDTH>, HEIGHT> mFrameBuffer;
+
+
 private:
 
-	unsigned char mRAM[4096];
-	unsigned short mStack[32];
+	unsigned char mRAM[MEMORYSIZE];
+	unsigned short mStack[STACKSIZE];
 	
 	unsigned char mV[16];
 	unsigned short mPC = 0;
@@ -29,8 +39,6 @@ private:
 	unsigned char mDT = 0;
 	unsigned char mST = 0;
 
-	bool mFrameBuffer[64][32];
-
 	void SYS(short addr);
 	void CLS();
 	void RET();//to do
@@ -39,15 +47,15 @@ private:
 	void CALL(short addr);//to do
 	void DRW(char vX, char vY, short size);//to do
 
-	void SE(char v, char k);//to do
-	void SE(char v0, char v1);//to do
-	void SNE(char v, char k);//to do
-	void SNE(char v0, char v1);//to do
+	void SE_VAL(char v, char k);//to do
+	void SE_RGSTR(char v0, char v1);//to do
+	void SNE_VAL(char v, char k);//to do
+	void SNE_RGSTR(char v0, char v1);//to do
 	void SKP(char v);//to do
 	void SKNP(char v);//to do
 
-	void LD(char v, char val);
-	void LD(char srcV, char dstV);
+	void LD_VAL(char v, char val);
+	void LD_RGSTR(char srcV, char dstV);
 	void LDIN(unsigned short addr);
 	void LDVDT(char v);
 	void LDVK(char v, char key);
@@ -73,9 +81,4 @@ private:
 	void SHR(char srcV, char dstV);
 	void SHL(char srcV, char dstV);
 
-
-	Chip8() {}
 };
-
-
-#define Emulator (Chip8::GetInstance())

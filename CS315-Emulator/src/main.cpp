@@ -6,37 +6,41 @@
 #include "Disassembler.h"
 #include "Input.h"
 #include "Editor.h"
+#include "Shader.h"
+#include "Renderer.h"
 
 #undef main
 int main(void)
-{
-	/*
+	{
 	Utils::InitSDL();
-	Window.Create();
+	Window.Create(glm::ivec2{ Chip8::WIDTH * 8, Chip8::HEIGHT * 8});
 	Utils::InitGL();
+
+	Renderer GFX;
+	GFX.initialize();
+	
 	InputManager.Initialize();
-	Editor.Initialize();
+	//Editor.Initialize();
+	Chip8 Emulator;
+
+	Emulator.mFrameBuffer[Chip8::HEIGHT / 2][Chip8::WIDTH / 2] = true;
 
 	while (!Window.IsClosed())
 	{
-		Editor.StartFrame();
+		//Editor.StartFrame();
 		InputManager.StartFrame();
 		InputManager.HandleEvents();
 		
-		Window.Update();
+		//Window.Update();
 		Emulator.Update();
-
-		Window.Clear();
-		Editor.Render();
-		Window.SwapBuffers();
-
+		GFX.render();
+		GFX.update(Emulator.mFrameBuffer);
 	}
 
 	Window.ShutDown();
-	Editor.ShutDown();
+	//Editor.ShutDown();
 	SDL_Quit();
-	*/
-
+	/*
 	std::ifstream f;
 	f.open("test_opcode.ch8", std::ios::binary | std::ios::in);
 
@@ -63,6 +67,6 @@ int main(void)
 
 		seekpos += 2;
 	}
-
+	*/
 	return 0;
 }
