@@ -41,7 +41,7 @@ int main(void)
 		GFX.update(Emulator.mFrameBuffer);
 	
 		Window.Clear();
-		Editor.Render();
+		//Editor.Render();
 		Window.SwapBuffers();
 	
 	}

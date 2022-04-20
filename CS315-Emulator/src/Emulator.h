@@ -12,7 +12,7 @@ public:
 		, mStack{}
 		, mV{}
 		, mFrameBuffer { {} }
-	{ std::srand(std::time(nullptr)); }
+	{ std::srand((unsigned int)std::time(nullptr)); }
 
 	int LoadRom(std::string rom = "test_opcode.ch8");
 	void Update();
@@ -43,8 +43,6 @@ private:
 
 	unsigned char mDT = 0;
 	unsigned char mST = 0;
-
-	std::array<std::array<bool, WIDTH>, HEIGHT> mFrameBuffer;
 
 	void CLS();
 	void RET();

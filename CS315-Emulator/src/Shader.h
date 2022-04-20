@@ -2,7 +2,7 @@
 #include <string>
 #include "gl/glew.h"
 #include <glm/vec3.hpp>
-#include <glm/vec4.hpp>"
+#include <glm/vec4.hpp>
 #include <glm/ext/vector_float2.hpp>
 
 class Shader

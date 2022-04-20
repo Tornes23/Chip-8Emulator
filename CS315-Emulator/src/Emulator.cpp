@@ -28,11 +28,11 @@ void Chip8::Update()
 void Chip8::HandleOpcode(const Opcode& op)
 {
 	unsigned short first = op.mOpcode & 0xF000;
-	uint16_t src = op.GetSrcRegister();
-	uint16_t dst = op.GetDestRegister();
+	uint8_t src = op.GetSrcRegister();
+	uint8_t dst = op.GetDestRegister();
 	uint16_t mem = op.GetMemory();
-	uint16_t val = op.GetValue();
-	uint16_t last = op.GetCount();
+	uint8_t val = op.GetValue();
+	uint8_t last = op.GetCount();
 	mPC += 2;
 
 	switch (first)
@@ -130,11 +130,11 @@ void Chip8::HandleOpcode(const Opcode& op)
 
 void Chip8::Ox8(const Opcode& op)
 {
-	uint16_t src = op.GetSrcRegister();
-	uint16_t dst = op.GetDestRegister();
+	uint8_t src = op.GetSrcRegister();
+	uint8_t dst = op.GetDestRegister();
 	uint16_t mem = op.GetMemory();
-	uint16_t val = op.GetValue();
-	uint16_t last = op.GetCount();
+	uint8_t val = op.GetValue();
+	uint8_t last = op.GetCount();
 
 	switch (last)
 	{
@@ -192,11 +192,11 @@ void Chip8::Ox8(const Opcode& op)
 
 void Chip8::OxF(const Opcode& op)
 {
-	uint16_t src = op.GetSrcRegister();
-	uint16_t dst = op.GetDestRegister();
+	uint8_t src = op.GetSrcRegister();
+	uint8_t dst = op.GetDestRegister();
 	uint16_t mem = op.GetMemory();
-	uint16_t val = op.GetValue();
-	uint16_t last = op.GetCount();
+	uint8_t val = op.GetValue();
+	uint8_t last = op.GetCount();
 
 	switch (last)
 	{
@@ -207,7 +207,7 @@ void Chip8::OxF(const Opcode& op)
 		}
 		case 0x0A://LD VX K
 		{
-			LDVK(src, val);
+			LDVK(src);
 			break;
 		}
 		case 0x15://LD DT VX
@@ -253,9 +253,7 @@ void Chip8::OxF(const Opcode& op)
 }
 
 #pragma region SYSTEM FUNCTIONS
-void Chip8::SYS(short addr)
-{
-}
+
 void Chip8::CLS()
 {
 	std::memset(&mFrameBuffer, false, sizeof(mFrameBuffer));
