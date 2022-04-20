@@ -23,6 +23,9 @@ public:
 	static const unsigned WIDTH = 64;
 	static const unsigned HEIGHT = 32;
 
+	std::array<std::array<bool, WIDTH>, HEIGHT> mFrameBuffer;
+
+
 private:
 
 	unsigned char mRAM[MEMORYSIZE];
@@ -35,8 +38,6 @@ private:
 
 	unsigned char mDT = 0;
 	unsigned char mST = 0;
-
-	std::array<std::array<bool, WIDTH>, HEIGHT> mFrameBuffer;
 
 	void SYS(short addr);
 	void CLS();

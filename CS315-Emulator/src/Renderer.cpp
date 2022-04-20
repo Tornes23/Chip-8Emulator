@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include <glm/gtc/random.hpp>
 
 void Renderer::initialize()
 {
@@ -68,6 +69,25 @@ void Renderer::initialize()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+	m_program.Use();
+	m_program.SetIntUniform("ourTexture", 0);
+}
+
+void Renderer::update(std::array<std::array<bool, Chip8::WIDTH>, Chip8::HEIGHT>& FrameBuffer)
+{
+	int px = 0;
+	for (int i = 0; i < Chip8::HEIGHT; i++)
+	{
+		for (int j = 0; j < Chip8::WIDTH; j++)
+		{
+			m_pixels[px++] = FrameBuffer[i][j] * 255;
+			m_pixels[px++] = FrameBuffer[i][j] * 255;
+			m_pixels[px++] = FrameBuffer[i][j] * 255;
+			m_pixels[px++] = FrameBuffer[i][j] * 255;
+		}
+	}
+	glBindTexture(GL_TEXTURE_2D, m_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, &m_pixels[0]);
 	m_program.Use();
 	m_program.SetIntUniform("ourTexture", 0);
 }

@@ -23,6 +23,8 @@ int main(void)
 	//Editor.Initialize();
 	Chip8 Emulator;
 
+	Emulator.mFrameBuffer[Chip8::HEIGHT / 2][Chip8::WIDTH / 2] = true;
+
 	while (!Window.IsClosed())
 	{
 		//Editor.StartFrame();
@@ -32,6 +34,7 @@ int main(void)
 		//Window.Update();
 		Emulator.Update();
 		GFX.render();
+		GFX.update(Emulator.mFrameBuffer);
 	}
 
 	Window.ShutDown();
