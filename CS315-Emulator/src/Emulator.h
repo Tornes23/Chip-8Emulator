@@ -4,6 +4,7 @@
 #include "Disassembler.h"
 #include "Input.h"
 #include <time.h>
+#include <bitset>
 
 class Chip8
 {
@@ -38,9 +39,8 @@ public:
 	static const unsigned WIDTH = 64u;
 	static const unsigned HEIGHT = 32u;
 
-	std::array<std::array<bool, WIDTH>, HEIGHT> mFrameBuffer;
+	std::array<std::bitset<WIDTH>, HEIGHT> mFrameBuffer;
 	std::array<Key, 16> mInputKeys;
-
 
 private:
 	Disassembler mDisassembler;

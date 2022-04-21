@@ -1,4 +1,5 @@
 #include <memory>
+#include <iostream>
 #include "Input.h"
 #include "Emulator.h"
 #include "Disassembler.h"
@@ -8,6 +9,7 @@ int Chip8::LoadRom(std::string rom)
 	if (mDisassembler.LoadRom(rom) < 0)
 		return -1;
 
+	/*
 	char mFonts[16][5] = { { (char)0xF0, (char)0x90, (char)0x90, (char)0x90, (char)0xF0 },
 						   { (char)0x20, (char)0x60, (char)0x20, (char)0x20, (char)0x70 },
 						   { (char)0xF0, (char)0x10, (char)0xF0, (char)0x80, (char)0xF0 },
@@ -27,16 +29,28 @@ int Chip8::LoadRom(std::string rom)
 						 };
 
 	std::memcpy(&mRAM[0x0], &mFonts[0x0], 16 * 5);
+	*/
 
+	mPC = 0;
+	Opcode op;
+	while (mDisassembler.seekpos < mDisassembler.romSize)
+	{
+		op = mDisassembler.GetInstruction();
+		std::memcpy(&mRAM[mPC], &op.mOpcode, sizeof(uint16_t));
+		mPC += 2;
+	}
 
+	mPC = 0x200;
 	return 0;
 }
 
 void Chip8::Update()
 {
 	//get Opcode, update stack
-	Opcode operation = mDisassembler.GetInstruction();
-	mPC += 2;
+	Opcode operation(*reinterpret_cast<uint16_t*>(&mRAM[mPC]));
+	std::cout << std::hex << mPC << ": ";
+	mDisassembler.PrintOpcode(operation.mOpcode);
+	std::cout << std::endl;
 
 	HandleOpcode(operation);
 
@@ -308,7 +322,7 @@ void Chip8::CALL(unsigned short addr)
 
 void Chip8::DRW(char vX, char vY, unsigned short size)
 {
-
+	int hola;
 }
 #pragma endregion
 

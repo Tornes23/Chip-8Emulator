@@ -18,7 +18,7 @@ struct color
 struct Renderer
 {
 	void initialize();
-	void update(std::array<std::array<bool, Chip8::WIDTH>, Chip8::HEIGHT> & mFrameBuffer);
+	void update(std::array<std::bitset<Chip8::WIDTH>, Chip8::HEIGHT> & mFrameBuffer);
 	void render();
 	std::vector<char> m_pixels;
 

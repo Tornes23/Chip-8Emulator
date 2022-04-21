@@ -73,7 +73,7 @@ void Renderer::initialize()
 	m_program.SetIntUniform("ourTexture", 0);
 }
 
-void Renderer::update(std::array<std::array<bool, Chip8::WIDTH>, Chip8::HEIGHT>& FrameBuffer)
+void Renderer::update(std::array<std::bitset<Chip8::WIDTH>, Chip8::HEIGHT> & FrameBuffer)
 {
 	int px = 0;
 	for (int i = 0; i < Chip8::HEIGHT; i++)
