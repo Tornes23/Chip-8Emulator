@@ -3,13 +3,14 @@
 #include "Input.h"
 #include "Emulator.h"
 #include "Disassembler.h"
+#include "Utils.h"
 
 int Chip8::LoadRom(std::string rom)
 {
 	if (mDisassembler.LoadRom(rom) < 0)
 		return -1;
 
-	/*
+
 	char mFonts[16][5] = { { (char)0xF0, (char)0x90, (char)0x90, (char)0x90, (char)0xF0 },
 						   { (char)0x20, (char)0x60, (char)0x20, (char)0x20, (char)0x70 },
 						   { (char)0xF0, (char)0x10, (char)0xF0, (char)0x80, (char)0xF0 },
@@ -29,9 +30,8 @@ int Chip8::LoadRom(std::string rom)
 						 };
 
 	std::memcpy(&mRAM[0x0], &mFonts[0x0], 16 * 5);
-	*/
 
-	mPC = 0;
+	mPC = 0x200;
 	Opcode op;
 	while (mDisassembler.seekpos < mDisassembler.romSize)
 	{
@@ -53,6 +53,7 @@ void Chip8::Update()
 	std::cout << std::endl;
 
 	HandleOpcode(operation);
+	mPC += 2;
 
 	if (mDT > 0)
 		mDT--;
@@ -62,13 +63,12 @@ void Chip8::Update()
 
 void Chip8::HandleOpcode(const Opcode& op)
 {
-	unsigned short first = op.mOpcode & 0xF000;
+	uint16_t first = Utils::GetBits(op.mOpcode, 0);
 	uint8_t src = op.GetSrcRegister();
 	uint8_t dst = op.GetDestRegister();
 	uint16_t mem = op.GetMemory();
 	uint8_t val = op.GetValue();
 	uint8_t last = op.GetCount();
-	mPC += 2;
 
 	switch (first)
 	{
@@ -159,6 +159,10 @@ void Chip8::HandleOpcode(const Opcode& op)
 		{
 			OxF(op);
 			break;
+		}
+		default:
+		{
+			std::cout << "ERROR NO HANDLER" << std::endl;
 		}
 	}
 }

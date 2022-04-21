@@ -21,7 +21,7 @@ int main(void)
 	std::cout << h << std::endl;
 
 	Chip8 emulator;
-	if (emulator.LoadRom("spaceinvaders.ch8") < 0)
+	if (emulator.LoadRom() < 0)
 		return -1;
 
 	Utils::InitSDL();
