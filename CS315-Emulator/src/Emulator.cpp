@@ -1,44 +1,59 @@
 #include <memory>
+#include <iostream>
 #include "Input.h"
 #include "Emulator.h"
 #include "Disassembler.h"
+#include "Utils.h"
 
 int Chip8::LoadRom(std::string rom)
 {
 	if (mDisassembler.LoadRom(rom) < 0)
 		return -1;
 
-	char mFonts[16][5] = { { (char)0xF0, (char)0x90, (char)0x90, (char)0x90, (char)0xF0 },
-						   { (char)0x20, (char)0x60, (char)0x20, (char)0x20, (char)0x70 },
-						   { (char)0xF0, (char)0x10, (char)0xF0, (char)0x80, (char)0xF0 },
-						   { (char)0xF0, (char)0x10, (char)0xF0, (char)0x10, (char)0xF0 },
-						   { (char)0x90, (char)0x90, (char)0xF0, (char)0x10, (char)0x10 },
-						   { (char)0xF0, (char)0x80, (char)0xF0, (char)0x10, (char)0xF0 },
-						   { (char)0xF0, (char)0x80, (char)0xF0, (char)0x90, (char)0xF0 },
-						   { (char)0xF0, (char)0x10, (char)0x20, (char)0x40, (char)0x40 },
-						   { (char)0xF0, (char)0x90, (char)0xF0, (char)0x90, (char)0xF0 },
-						   { (char)0xF0, (char)0x90, (char)0xF0, (char)0x10, (char)0xF0 },
-						   { (char)0xF0, (char)0x90, (char)0xF0, (char)0x90, (char)0x90 },
-						   { (char)0xE0, (char)0x90, (char)0xE0, (char)0x90, (char)0xE0 },
-						   { (char)0xF0, (char)0x80, (char)0x80, (char)0x80, (char)0xF0 },
-						   { (char)0xE0, (char)0x90, (char)0x90, (char)0x90, (char)0xE0 },
-						   { (char)0xF0, (char)0x80, (char)0xF0, (char)0x80, (char)0xF0 },
-						   { (char)0xF0, (char)0x80, (char)0xF0, (char)0x80, (char)0x80 } 
+
+	uint8_t mFonts[16][5] = {	{ 0xF0, 0x90, 0x90, 0x90, 0xF0 },
+								{ 0x20, 0x60, 0x20, 0x20, 0x70 },
+								{ 0xF0, 0x10, 0xF0, 0x80, 0xF0 },
+								{ 0xF0, 0x10, 0xF0, 0x10, 0xF0 },
+								{ 0x90, 0x90, 0xF0, 0x10, 0x10 },
+								{ 0xF0, 0x80, 0xF0, 0x10, 0xF0 },
+								{ 0xF0, 0x80, 0xF0, 0x90, 0xF0 },
+								{ 0xF0, 0x10, 0x20, 0x40, 0x40 },
+								{ 0xF0, 0x90, 0xF0, 0x90, 0xF0 },
+								{ 0xF0, 0x90, 0xF0, 0x10, 0xF0 },
+								{ 0xF0, 0x90, 0xF0, 0x90, 0x90 },
+								{ 0xE0, 0x90, 0xE0, 0x90, 0xE0 },
+								{ 0xF0, 0x80, 0x80, 0x80, 0xF0 },
+								{ 0xE0, 0x90, 0x90, 0x90, 0xE0 },
+								{ 0xF0, 0x80, 0xF0, 0x80, 0xF0 },
+								{ 0xF0, 0x80, 0xF0, 0x80, 0x80 } 
 						 };
 
 	std::memcpy(&mRAM[0x0], &mFonts[0x0], 16 * 5);
 
+	mPC = 0x200;
+	Opcode op;
+	while (mDisassembler.seekpos < mDisassembler.romSize)
+	{
+		op = mDisassembler.GetInstruction();
+		std::memcpy(&mRAM[mPC], &op.mOpcode, sizeof(uint16_t));
+		mPC += 2;
+	}
 
+	mPC = 0x200;
 	return 0;
 }
 
 void Chip8::Update()
 {
 	//get Opcode, update stack
-	Opcode operation = mDisassembler.GetInstruction();
-	mPC += 2;
+	Opcode operation(*reinterpret_cast<uint16_t*>(&mRAM[mPC]));
+	std::cout << std::hex << mPC << ": ";
+	mDisassembler.PrintOpcode(operation.mOpcode);
+	std::cout << std::endl;
 
 	HandleOpcode(operation);
+	mPC += 2;
 
 	if (mDT > 0)
 		mDT--;
@@ -48,13 +63,12 @@ void Chip8::Update()
 
 void Chip8::HandleOpcode(const Opcode& op)
 {
-	unsigned short first = op.mOpcode & 0xF000;
+	uint16_t first = Utils::GetBits(op.mOpcode, 0);
 	uint8_t src = op.GetSrcRegister();
 	uint8_t dst = op.GetDestRegister();
 	uint16_t mem = op.GetMemory();
 	uint8_t val = op.GetValue();
 	uint8_t last = op.GetCount();
-	mPC += 2;
 
 	switch (first)
 	{
@@ -145,6 +159,10 @@ void Chip8::HandleOpcode(const Opcode& op)
 		{
 			OxF(op);
 			break;
+		}
+		default:
+		{
+			std::cout << "ERROR NO HANDLER" << std::endl;
 		}
 	}
 }
@@ -283,7 +301,6 @@ void Chip8::RET()
 {
 	mSP--;//decrease stack pointer
 	mPC = mStack[mSP];//update the program counter to the correct address
-	mPC += 2;//moving the program counter
 }
 
 void Chip8::JP(unsigned short addr)
@@ -308,7 +325,32 @@ void Chip8::CALL(unsigned short addr)
 
 void Chip8::DRW(char vX, char vY, unsigned short size)
 {
+	uint16_t row = vY;
+	uint16_t col = vX;
+	uint8_t * location = &mRAM[mI];
+	bool collision = false;
 
+	for (unsigned short i = 0; i < size; i++)
+	{
+		row = (mV[vY] + i) % HEIGHT;
+		std::bitset<8> spriterow = *location;
+
+		for (unsigned short j = 0; j < 8; j++)
+		{
+			col = (mV[vX] + j) % WIDTH;
+
+			if (mFrameBuffer[row][col] && spriterow[j])
+				collision = true;
+
+			bool paint = mFrameBuffer[row][col] ^ spriterow[j];
+			mFrameBuffer[row][col] = paint;
+
+		}
+
+		location++;
+	}
+	
+	mV[0xF] = collision;
 }
 #pragma endregion
 
@@ -316,48 +358,36 @@ void Chip8::DRW(char vX, char vY, unsigned short size)
 void Chip8::SE_VAL(char v, char k)
 {
 	if (mV[v] == k)
-		mPC += 4;//addign 4 to skip next instruction
-	else
-		mPC += 2;//regular update of the program counter
+		mPC += 2;
 }
 
 void Chip8::SE_RGSTR(char v0, char v1)
 {
 	if (mV[v0] == mV[v1])
-		mPC += 4;//addign 4 to skip next instruction
-	else
-		mPC += 2;//regular update of the program counter
+		mPC += 2;
 }
 void Chip8::SNE_VAL(char v, char k)
 {
 	if (mV[v] != k)
-		mPC += 4;//addign 4 to skip next instruction
-	else
-		mPC += 2;//regular update of the program counter
+		mPC += 2;
 }
 void Chip8::SNE_RGSTR(char v0, char v1)
 {
-	if (mV[v0] != mV[v0])
-		mPC += 4;//addign 4 to skip next instruction
-	else
-		mPC += 2;//regular update of the program counter
+	if (mV[v0] != mV[v1])
+		mPC += 2;
 }
 #pragma endregion
 
 #pragma region INSTRUCTION FUNCTIONS
 void Chip8::SKP(char v)
 {
-	if(KeyDown(mInputKeys[mV[v]]))
-		mPC += 4;//addign 4 to skip next instruction
-	else
-		mPC += 2;//regular update of the program counter
+	if (KeyDown(mInputKeys[mV[v]]))
+		mPC += 2;
 }
 void Chip8::SKNP(char v)
 {
 	if (!KeyDown(mInputKeys[mV[v]]))
-		mPC += 4;//addign 4 to skip next instruction
-	else
-		mPC += 2;//regular update of the program counter
+		mPC += 2;
 }
 void Chip8::LD_VAL(char v, char val)
 {

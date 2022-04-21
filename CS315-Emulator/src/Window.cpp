@@ -54,8 +54,6 @@ void WindowClass::ShutDown()
 
 void WindowClass::SwapBuffers()
 {
-	SDL_GL_SetSwapInterval(0);
-	//swapping the front and back buffers
 	SDL_GL_SwapWindow(mWindow);
 }
 

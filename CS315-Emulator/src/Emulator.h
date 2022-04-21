@@ -3,6 +3,8 @@
 #include <array>
 #include "Disassembler.h"
 #include "Input.h"
+#include <time.h>
+#include <bitset>
 
 class Chip8
 {
@@ -19,7 +21,9 @@ public:
 					   Key::Z,    Key::X,    Key::C,    Key::V,
 					 }
 
-	{ std::srand((unsigned int)std::time(nullptr)); }
+	{ 
+		std::srand(time(nullptr));
+	}
 
 	int LoadRom(std::string rom = "test_opcode.ch8");
 	void Update();
@@ -35,9 +39,8 @@ public:
 	static const unsigned WIDTH = 64u;
 	static const unsigned HEIGHT = 32u;
 
-	std::array<std::array<bool, WIDTH>, HEIGHT> mFrameBuffer;
+	std::array<std::bitset<WIDTH>, HEIGHT> mFrameBuffer;
 	std::array<Key, 16> mInputKeys;
-
 
 private:
 	Disassembler mDisassembler;

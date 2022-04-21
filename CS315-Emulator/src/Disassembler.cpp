@@ -256,7 +256,7 @@ Opcode Disassembler::GetInstruction()
 	std::swap(buf[0], buf[1]); // little endian conversor
 	uint16_t opcode = *reinterpret_cast<uint16_t*>(buf);
 
-	std::cout << std::hex << seekpos << ": ";
+	std::cout << std::hex << seekpos + 0x200 << ": ";
 	Disassembler::PrintOpcode(opcode);
 	std::cout << std::endl;
 
