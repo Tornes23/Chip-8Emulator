@@ -8,6 +8,7 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 {
 	uint16_t initial_byte = Utils::GetBits(opcode, 0);
 	Opcode code(opcode);
+	opcode = Utils::GetBits(opcode, 0, 4);
 	std::cout << std::hex << opcode << " -> ";
 
 	switch (initial_byte)
@@ -48,7 +49,7 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 	}
 	case 0x3:
 	{
-		uint16_t VX = code.GetSrcRegister();
+		uint16_t VX = code.GetVXRegister();
 		uint16_t KK = code.GetValue();
 		std::cout << "SE V" << std::hex << VX << " " << std::hex << KK;
 
@@ -56,7 +57,7 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 	}
 	case 0x4:
 	{
-		uint16_t VX = code.GetSrcRegister();
+		uint16_t VX = code.GetVXRegister();
 		uint16_t KK = code.GetValue();
 		std::cout << "SNE V" << std::hex << VX << " " << std::hex << KK;
 
@@ -66,7 +67,7 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 	{
 		if (code.GetCount() == 0)
 		{
-			std::cout << "SE V" << std::hex << code.GetSrcRegister() << " V" << std::hex << code.GetDestRegister();
+			std::cout << "SE V" << std::hex << code.GetVXRegister() << " V" << std::hex << code.GetVYRegister();
 			break;
 		}
 		std::cout << "UNKN";
@@ -74,7 +75,7 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 	}
 	case 0x6:
 	{
-		uint16_t VX = code.GetSrcRegister();
+		uint16_t VX = code.GetVXRegister();
 		uint16_t KK = code.GetValue();
 		std::cout << "LD V" << VX << " " << KK;
 
@@ -82,7 +83,7 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 	}
 	case 0x7:
 	{
-		uint16_t VX = code.GetSrcRegister();
+		uint16_t VX = code.GetVXRegister();
 		uint16_t KK = code.GetValue();
 		std::cout << "ADD V" << VX << " " << KK;
 
@@ -96,47 +97,47 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 		{
 		case 0x0:
 		{
-			std::cout << "LD V" << std::hex << code.GetSrcRegister() << " V" << std::hex << code.GetDestRegister();
+			std::cout << "LD V" << std::hex << code.GetVXRegister() << " V" << std::hex << code.GetVYRegister();
 			break;
 		}
 		case 0x1:
 		{
-			std::cout << "OR V" << std::hex << code.GetSrcRegister() << " V" << std::hex << code.GetDestRegister();
+			std::cout << "OR V" << std::hex << code.GetVXRegister() << " V" << std::hex << code.GetVYRegister();
 			break;
 		}
 		case 0x2:
 		{
-			std::cout << "AND V" << std::hex << code.GetSrcRegister() << " V" << std::hex << code.GetDestRegister();
+			std::cout << "AND V" << std::hex << code.GetVXRegister() << " V" << std::hex << code.GetVYRegister();
 			break;
 		}
 		case 0x3:
 		{
-			std::cout << "XOR V" << std::hex << code.GetSrcRegister() << " V" << std::hex << code.GetDestRegister();
+			std::cout << "XOR V" << std::hex << code.GetVXRegister() << " V" << std::hex << code.GetVYRegister();
 			break;
 		}
 		case 0x4:
 		{
-			std::cout << "ADD V" << std::hex << code.GetSrcRegister() << " V" << std::hex << code.GetDestRegister();
+			std::cout << "ADD V" << std::hex << code.GetVXRegister() << " V" << std::hex << code.GetVYRegister();
 			break;
 		}
 		case 0x5:
 		{
-			std::cout << "SUB V" << std::hex << code.GetSrcRegister() << " V" << std::hex << code.GetDestRegister();
+			std::cout << "SUB V" << std::hex << code.GetVXRegister() << " V" << std::hex << code.GetVYRegister();
 			break;
 		}
 		case 0x6:
 		{
-			std::cout << "SHR V" << std::hex << code.GetSrcRegister() << " V" << std::hex << code.GetDestRegister();
+			std::cout << "SHR V" << std::hex << code.GetVXRegister() << " V" << std::hex << code.GetVYRegister();
 			break;
 		}
 		case 0x7:
 		{
-			std::cout << "SUBN V" << std::hex << code.GetSrcRegister() << " V" << std::hex << code.GetDestRegister();
+			std::cout << "SUBN V" << std::hex << code.GetVXRegister() << " V" << std::hex << code.GetVYRegister();
 			break;
 		}
 		case 0xE:
 		{
-			std::cout << "SHL V" << std::hex << code.GetSrcRegister() << " V" << std::hex << code.GetDestRegister();
+			std::cout << "SHL V" << std::hex << code.GetVXRegister() << " V" << std::hex << code.GetVYRegister();
 			break;
 		}
 		default:
@@ -149,8 +150,8 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 	}
 	case 0x9:
 	{
-		short src = code.GetSrcRegister();
-		short dst = code.GetDestRegister();
+		short src = code.GetVXRegister();
+		short dst = code.GetVYRegister();
 
 		std::cout << "SNE V" << std::hex << src << " V" << std::hex << dst;
 		break;
@@ -169,7 +170,7 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 	}
 	case 0xC:
 	{
-		short src = code.GetSrcRegister();
+		short src = code.GetVXRegister();
 		short val = code.GetValue();
 
 		std::cout << "RND V" << std::hex << src << " " << std::hex << val;
@@ -177,8 +178,8 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 	}
 	case 0xD:
 	{
-		short src = code.GetSrcRegister();
-		short dst = code.GetDestRegister();
+		short src = code.GetVXRegister();
+		short dst = code.GetVYRegister();
 		short val = code.GetCount();
 
 		std::cout << "DRW V" << std::hex << src << " V" << std::hex << dst << " " << std::hex << val;
@@ -187,7 +188,7 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 	case 0xE:
 	{
 		short val = code.GetValue();
-		short src = code.GetSrcRegister();
+		short src = code.GetVXRegister();
 
 		if (val == 0x9e)
 			std::cout << "SKP V" << std::hex << src;
@@ -201,7 +202,7 @@ void Disassembler::PrintOpcode(uint16_t opcode)
 	case 0xF:
 	{
 		short val = code.GetValue();
-		short src = code.GetSrcRegister();
+		short src = code.GetVXRegister();
 
 		if (val == 0x07)
 			std::cout << "LD V" << std::hex << src << "DT";
@@ -253,7 +254,7 @@ Opcode Disassembler::GetInstruction()
 	char buf[2];
 
 	rom.read(buf, 2);
-	std::swap(buf[0], buf[1]); // little endian conversor
+	//std::swap(buf[0], buf[1]); // little endian conversor
 	uint16_t opcode = *reinterpret_cast<uint16_t*>(buf);
 
 	std::cout << std::hex << seekpos + 0x200 << ": ";
@@ -270,12 +271,12 @@ Opcode::Opcode(uint16_t code)
 {
 }
 
-uint8_t Opcode::GetSrcRegister() const
+uint8_t Opcode::GetVXRegister() const
 {
 	return Utils::GetBits(mOpcode, 1);
 }
 
-uint8_t Opcode::GetDestRegister() const
+uint8_t Opcode::GetVYRegister() const
 {
 	return Utils::GetBits(mOpcode, 2);
 }

@@ -169,6 +169,8 @@ namespace Utils
     uint16_t GetMem(uint16_t buf_big_endian, int start, int count)
     {
         constexpr int opcode_size = 4;
+        char* buf = reinterpret_cast<char*>(&buf_big_endian);
+        std::swap(buf[0], buf[1]); // little endian conversor
 
         if (count <= 0 || start + count > opcode_size)
             return 0;
@@ -180,6 +182,8 @@ namespace Utils
     uint8_t GetBits(uint16_t buf_big_endian, int start, int count)
     {
         constexpr int opcode_size = 4;
+        char * buf = reinterpret_cast<char*>(&buf_big_endian);
+        std::swap(buf[0], buf[1]); // little endian conversor
 
         if (count <= 0 || start + count > opcode_size)
             return 0;

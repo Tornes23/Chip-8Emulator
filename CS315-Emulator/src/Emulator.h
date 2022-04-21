@@ -70,30 +70,30 @@ private:
 	void SKNP(char v);
 
 	void LD_VAL(char v, char val);
-	void LD_RGSTR(char srcV, char dstV);
+	void LD_RGSTR(char vX, char vY);
 	void LDIN(unsigned short addr);
 	void LDVDT(char v);
 	void LDVK(char v);
 	void LDDTV(char v);
-	void LDSTV(char v);
+	void LvY(char v);
 	void LDFV(char v);
 	void LDBV(char v);
 	void LDIV(char v);
 	void LDVI(char v);
 
-	void OR(char srcV, char dstV);
-	void AND(char srcV, char dstV);
-	void XOR(char srcV, char dstV);
+	void OR(char vX, char vY);
+	void AND(char vX, char vY);
+	void XOR(char vX, char vY);
 
 	void ADD_VAL(char v, char val);
-	void ADD_RGSTR(char srcV, char dstV);
+	void ADD_RGSTR(char vX, char vY);
 	void ADDI(char v);
-	void SUB(char srcV, char dstV);
-	void SUBN(char srcV, char dstV);
+	void SUB(char vX, char vY);
+	void SUBN(char vX, char vY);
 	void RND(char v, char val);
 
 
-	void SHR(char srcV, char dstV);
-	void SHL(char srcV, char dstV);
+	void SHR(char vX, char vY);
+	void SHL(char vX, char vY);
 
 };

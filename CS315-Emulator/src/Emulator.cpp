@@ -64,8 +64,8 @@ void Chip8::Update()
 void Chip8::HandleOpcode(const Opcode& op)
 {
 	uint16_t first = Utils::GetBits(op.mOpcode, 0);
-	uint8_t src = op.GetSrcRegister();
-	uint8_t dst = op.GetDestRegister();
+	uint8_t VX = op.GetVXRegister();
+	uint8_t VY = op.GetVYRegister();
 	uint16_t mem = op.GetMemory();
 	uint8_t val = op.GetValue();
 	uint8_t last = op.GetCount();
@@ -74,9 +74,9 @@ void Chip8::HandleOpcode(const Opcode& op)
 	{
 		case 0x0:
 		{
-			if (op.mOpcode == 0x00E0)// CLS
+			if (op.mOpcode == 0xE000)// CLS
 				CLS();
-			else if (op.mOpcode == 0x00EE)// RET
+			else if (op.mOpcode == 0xEE00)// RET
 				RET();
 			break;
 		}
@@ -92,28 +92,28 @@ void Chip8::HandleOpcode(const Opcode& op)
 		}
 		case 0x3://SE VX KK
 		{
-			SE_VAL(src, val);
+			SE_VAL(VX, val);
 			break;
 		}
 		case 0x4://SNE VX KK
 		{
-			SNE_VAL(src, val);
+			SNE_VAL(VX, val);
 			break;
 		}
 		case 0x5:
 		{
 			if (op.GetCount() == 0)//SE VX VY
-				SE_RGSTR(src, dst);
+				SE_RGSTR(VX, VY);
 			break;
 		}
 		case 0x6://LD VX KK
 		{
-			LD_VAL(src, val);
+			LD_VAL(VX, val);
 			break;
 		}
 		case 0x7://ADD VX KK
 		{
-			ADD_VAL(src, val);
+			ADD_VAL(VX, val);
 			break;
 		}
 		case 0x8:
@@ -123,7 +123,7 @@ void Chip8::HandleOpcode(const Opcode& op)
 		}
 		case 0x9://SNE VX VY
 		{
-			SNE_RGSTR(src, dst);
+			SNE_RGSTR(VX, VY);
 			break;
 		}
 		case 0xA://LD I NNN
@@ -138,21 +138,20 @@ void Chip8::HandleOpcode(const Opcode& op)
 		}
 		case 0xC://RND VX KK
 		{
-			RND(src, val);
+			RND(VX, val);
 			break;
 		}
 		case 0xD://DRW VX VY N
 		{
-			DRW(src, dst, last);
+			DRW(VX, VY, last);
 			break;
 		}
 		case 0xE://
 		{
 			if (val == 0x9E)//SKP VX
-				SKP(src);
+				SKP(VX);
 			else if (val == 0xA1)//SKNP VX
-				SKNP(src);
-
+				SKNP(VX);
 			break;
 		}
 		case 0xF:
@@ -169,8 +168,8 @@ void Chip8::HandleOpcode(const Opcode& op)
 
 void Chip8::Ox8(const Opcode& op)
 {
-	uint8_t src = op.GetSrcRegister();
-	uint8_t dst = op.GetDestRegister();
+	uint8_t VX = op.GetVXRegister();
+	uint8_t VY = op.GetVYRegister();
 	uint16_t mem = op.GetMemory();
 	uint8_t val = op.GetValue();
 	uint8_t last = op.GetCount();
@@ -179,47 +178,47 @@ void Chip8::Ox8(const Opcode& op)
 	{
 		case 0x0://LD VX VY
 		{
-			LD_RGSTR(src, dst);
+			LD_RGSTR(VX, VY);
 			break;
 		}
 		case 0x1://OR VX VY
 		{
-			OR(src, dst);
+			OR(VX, VY);
 			break;
 		}
 		case 0x2://AND VX VY
 		{
-			AND(src, dst);
+			AND(VX, VY);
 			break;
 		}
 		case 0x3://XOR VX VY
 		{
-			XOR(src, dst);
+			XOR(VX, VY);
 			break;
 		}
 		case 0x4://ADD VX VY
 		{
-			ADD_RGSTR(src, dst);
+			ADD_RGSTR(VX, VY);
 			break;
 		}
 		case 0x5://SUB VX VY
 		{
-			SUB(src, dst);
+			SUB(VX, VY);
 			break;
 		}
 		case 0x6://SHR VX VY
 		{
-			SHR(src, dst);
+			SHR(VX, VY);
 			break;
 		}
 		case 0x7://SUBN VX VY
 		{
-			SUBN(src, dst);
+			SUBN(VX, VY);
 			break;
 		}
 		case 0xE://SHL VX VY
 		{
-			SHL(src, dst);
+			SHL(VX, VY);
 			break;
 		}
 		default:
@@ -231,8 +230,8 @@ void Chip8::Ox8(const Opcode& op)
 
 void Chip8::OxF(const Opcode& op)
 {
-	uint8_t src = op.GetSrcRegister();
-	uint8_t dst = op.GetDestRegister();
+	uint8_t VX = op.GetVXRegister();
+	uint8_t VY = op.GetVYRegister();
 	uint16_t mem = op.GetMemory();
 	uint8_t val = op.GetValue();
 	uint8_t last = op.GetCount();
@@ -241,47 +240,47 @@ void Chip8::OxF(const Opcode& op)
 	{
 		case 0x07://LD VX DT
 		{
-			LDVDT(src);
+			LDVDT(VX);
 			break;
 		}
 		case 0x0A://LD VX K
 		{
-			LDVK(src);
+			LDVK(VX);
 			break;
 		}
 		case 0x15://LD DT VX
 		{
-			LDDTV(src);
+			LDDTV(VX);
 			break;
 		}
 		case 0x18://LD ST VX
 		{
-			LDSTV(src);
+			LvY(VX);
 			break;
 		}
 		case 0x1E://ADD I VX
 		{
-			ADDI(src);
+			ADDI(VX);
 			break;
 		}
 		case 0x29://LD F VX
 		{
-			LDFV(src);
+			LDFV(VX);
 			break;
 		}
 		case 0x33://LD B VX
 		{
-			LDBV(src);
+			LDBV(VX);
 			break;
 		}
 		case 0x55://LD I VX
 		{
-			LDIV(src);
+			LDIV(VX);
 			break;
 		}
 		case 0x65://LD VX I
 		{
-			LDVI(src);
+			LDVI(VX);
 			break;
 		}
 		default:
@@ -339,14 +338,12 @@ void Chip8::DRW(char vX, char vY, unsigned short size)
 		{
 			col = (mV[vX] + j) % WIDTH;
 
-			if (mFrameBuffer[row][col] && spriterow[j])
+			if (mFrameBuffer[row][col] && spriterow[7 - j])
 				collision = true;
-
-			bool paint = mFrameBuffer[row][col] ^ spriterow[j];
-			mFrameBuffer[row][col] = paint;
-
+	
+				bool paint = mFrameBuffer[row][col] ^ spriterow[7 - j];
+				mFrameBuffer[row][col] = paint;
 		}
-
 		location++;
 	}
 	
@@ -357,7 +354,7 @@ void Chip8::DRW(char vX, char vY, unsigned short size)
 #pragma region INSTRUCTION FUNCTIONS
 void Chip8::SE_VAL(char v, char k)
 {
-	if (mV[v] == k)
+	if (mV[v] == (unsigned char)k)
 		mPC += 2;
 }
 
@@ -368,7 +365,7 @@ void Chip8::SE_RGSTR(char v0, char v1)
 }
 void Chip8::SNE_VAL(char v, char k)
 {
-	if (mV[v] != k)
+	if (mV[v] != (unsigned char)k)
 		mPC += 2;
 }
 void Chip8::SNE_RGSTR(char v0, char v1)
@@ -393,9 +390,9 @@ void Chip8::LD_VAL(char v, char val)
 {
 	mV[v] = val;
 }
-void Chip8::LD_RGSTR(char srcV, char dstV)
+void Chip8::LD_RGSTR(char vX, char vY)
 {
-	mV[dstV] = mV[srcV];
+	mV[vX] = mV[vY];
 }
 #pragma endregion
 
@@ -426,9 +423,8 @@ void Chip8::LDDTV(char v)
 {
 	mDT = mV[v];
 }
-void Chip8::LDSTV(char v)
+void Chip8::LvY(char v)
 {
-	mST = mV[v];
 }
 void Chip8::LDFV(char v)
 {
@@ -462,17 +458,17 @@ void Chip8::LDVI(char v)
 #pragma endregion
 
 #pragma region LOGICAL FUNCTIONS
-void Chip8::OR(char srcV, char dstV)
+void Chip8::OR(char vX, char vY)
 {
-	mV[dstV] |= mV[srcV];
+	mV[vX] |= mV[vY];
 }
-void Chip8::AND(char srcV, char dstV)
+void Chip8::AND(char vX, char vY)
 {
-	mV[dstV] &= mV[srcV];
+	mV[vX] &= mV[vY];
 }
-void Chip8::XOR(char srcV, char dstV)
+void Chip8::XOR(char vX, char vY)
 {
-	mV[dstV] ^= mV[srcV];
+	mV[vX] ^= mV[vY];
 }
 #pragma endregion
 
@@ -488,48 +484,40 @@ void Chip8::ADD_VAL(char v, char val)
 		mV[15] = 0;
 	//getting the lowest 8 bits of the short
 	mV[v] = result & 0x00FF;
-	
 }
-void Chip8::ADD_RGSTR(char srcV, char dstV)
+void Chip8::ADD_RGSTR(char vX, char vY)
 {
-	unsigned short result = mV[dstV] + mV[srcV];
+	unsigned short result = mV[vX] + mV[vY];
+
 	//check if overflow
-	if (result > 255)
-		mV[15] = 1;
-	else
-		mV[15] = 0;
+	mV[0xF] = (result > 255);
+
 	//getting the lowest 8 bits of the short
-	mV[dstV] = result & 0x00FF;
+	mV[vX] = result & 0x00FF;
 }
 void Chip8::ADDI(char v)
 {
 	unsigned short result = mV[v] + mI;
 	//check if overflow
-	if (result > 255)
-		mV[15] = 1;
-	else
-		mV[15] = 0;
+	mV[0xF] = (result > 255);
+
 	//getting the lowest 8 bits of the short
 	mI = result & 0x00FF;
 }
-void Chip8::SUB(char srcV, char dstV)
+void Chip8::SUB(char vX, char vY)
 {
-	//check if underflow
-	if (mV[dstV] < mV[srcV])
-		mV[15] = 1;
-	else
-		mV[15] = 0;
+	// check if underflow
+	mV[0xF] = mV[vY] > mV[vX];
 
-	mV[dstV] -= mV[srcV];
+	// substract
+	mV[vX] = mV[vX] - mV[vY];
 }
-void Chip8::SUBN(char srcV, char dstV)
+void Chip8::SUBN(char vX, char vY)
 {
-	if (mV[dstV] > mV[srcV])
-		mV[15] = 1;
-	else
-		mV[15] = 0;
+	// check if underflow
+	mV[0xF] = !(mV[vX] > mV[vY]);
 
-	mV[dstV] = mV[srcV] - mV[dstV];
+	mV[vX] = mV[vY] - mV[vX];
 }
 void Chip8::RND(char v, char val)
 {
@@ -538,13 +526,14 @@ void Chip8::RND(char v, char val)
 #pragma endregion
 
 #pragma region BIT MANIPULATION FUNCTIONS
-void Chip8::SHR(char srcV, char dstV)
+void Chip8::SHR(char vX, char vY)
 {
-	mV[dstV] >>= mV[srcV];
+	mV[0xF] = mV[vX] & 1;
+	mV[vX] <<= 1;
 }
-void Chip8::SHL(char srcV, char dstV)
+void Chip8::SHL(char vX, char vY)
 {
-	mV[dstV] <<= mV[srcV];
+	mV[vY] <<= mV[vX];
 }
 #pragma endregion
 

@@ -6,8 +6,8 @@ struct Opcode
 	Opcode(uint16_t code = 0);
 
 	uint16_t mOpcode;
-	uint8_t GetSrcRegister() const;
-	uint8_t GetDestRegister() const;
+	uint8_t GetVXRegister() const;
+	uint8_t GetVYRegister() const;
 	uint8_t GetValue() const;
 	uint16_t GetMemory() const;
 	uint8_t GetCount() const;
