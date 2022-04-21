@@ -301,7 +301,6 @@ void Chip8::RET()
 {
 	mSP--;//decrease stack pointer
 	mPC = mStack[mSP];//update the program counter to the correct address
-	mPC += 2;//moving the program counter
 }
 
 void Chip8::JP(unsigned short addr)
@@ -339,6 +338,7 @@ void Chip8::DRW(char vX, char vY, unsigned short size)
 		for (unsigned short j = 0; j < 8; j++)
 		{
 			col = (mV[vX] + j) % WIDTH;
+
 			if (mFrameBuffer[row][col] && spriterow[j])
 				collision = true;
 
@@ -358,48 +358,36 @@ void Chip8::DRW(char vX, char vY, unsigned short size)
 void Chip8::SE_VAL(char v, char k)
 {
 	if (mV[v] == k)
-		mPC += 4;//addign 4 to skip next instruction
-	else
-		mPC += 2;//regular update of the program counter
+		mPC += 2;
 }
 
 void Chip8::SE_RGSTR(char v0, char v1)
 {
 	if (mV[v0] == mV[v1])
-		mPC += 4;//addign 4 to skip next instruction
-	else
-		mPC += 2;//regular update of the program counter
+		mPC += 2;
 }
 void Chip8::SNE_VAL(char v, char k)
 {
 	if (mV[v] != k)
-		mPC += 4;//addign 4 to skip next instruction
-	else
-		mPC += 2;//regular update of the program counter
+		mPC += 2;
 }
 void Chip8::SNE_RGSTR(char v0, char v1)
 {
-	if (mV[v0] != mV[v0])
-		mPC += 4;//addign 4 to skip next instruction
-	else
-		mPC += 2;//regular update of the program counter
+	if (mV[v0] != mV[v1])
+		mPC += 2;
 }
 #pragma endregion
 
 #pragma region INSTRUCTION FUNCTIONS
 void Chip8::SKP(char v)
 {
-	if(KeyDown(mInputKeys[mV[v]]))
-		mPC += 4;//addign 4 to skip next instruction
-	else
-		mPC += 2;//regular update of the program counter
+	if (KeyDown(mInputKeys[mV[v]]))
+		mPC += 2;
 }
 void Chip8::SKNP(char v)
 {
 	if (!KeyDown(mInputKeys[mV[v]]))
-		mPC += 4;//addign 4 to skip next instruction
-	else
-		mPC += 2;//regular update of the program counter
+		mPC += 2;
 }
 void Chip8::LD_VAL(char v, char val)
 {
