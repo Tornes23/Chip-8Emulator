@@ -3,6 +3,7 @@
 #include <array>
 #include "Disassembler.h"
 #include "Input.h"
+#include <time.h>
 
 class Chip8
 {
@@ -19,7 +20,9 @@ public:
 					   Key::Z,    Key::X,    Key::C,    Key::V,
 					 }
 
-	{ std::srand((unsigned int)std::time(nullptr)); }
+	{ 
+		std::srand(time(nullptr));
+	}
 
 	int LoadRom(std::string rom = "test_opcode.ch8");
 	void Update();
