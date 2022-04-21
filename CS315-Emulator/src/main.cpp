@@ -34,8 +34,6 @@ int main(void)
 	InputManager.Initialize();
 	//Editor.Initialize();
 
-	emulator.mFrameBuffer[Chip8::HEIGHT / 2][Chip8::WIDTH / 2] = true;
-
 	while (!Window.IsClosed())
 	{
 		//Editor.StartFrame();
@@ -44,13 +42,13 @@ int main(void)
 		
 		//Window.Update();
 		emulator.Update();
-		GFX.render();
 		GFX.update(emulator.mFrameBuffer);
-	
+
 		Window.Clear();
-		//Editor.Render();
-		Window.SwapBuffers();
+		GFX.render();
 	
+		Window.SwapBuffers();
+		//Editor.Render();
 	}
 	
 	Window.ShutDown();

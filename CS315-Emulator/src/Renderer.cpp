@@ -5,10 +5,10 @@ void Renderer::initialize()
 {
 	float vertices[] = {
 		// positions          // colors           // texture coords
-		 1.f,  1.f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-		 1.f, -1.f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-		-1.f, -1.f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-		-1.f,  1.f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+		 1.f,  1.f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f, // top right
+		 1.f, -1.f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f, // bottom right
+		-1.f, -1.f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, // bottom left
+		-1.f,  1.f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f  // top left 
 	};
 	unsigned int indices[] = {
 		0, 1, 3, // first triangle
@@ -95,11 +95,11 @@ void Renderer::render()
 	int x, y;
 	SDL_GetWindowSize(Window.GetSDLWindow(), &x, &y);
 	glViewport(0, 0, x, y);
-	Window.Clear();
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
+
 	m_program.Use();
 	glBindVertexArray(m_VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	SDL_GL_SwapWindow(Window.GetSDLWindow());
 }
