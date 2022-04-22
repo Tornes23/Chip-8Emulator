@@ -529,11 +529,12 @@ void Chip8::RND(char v, char val)
 void Chip8::SHR(char vX, char vY)
 {
 	mV[0xF] = mV[vX] & 1;
-	mV[vX] <<= 1;
+	mV[vX] >>= 1;
 }
 void Chip8::SHL(char vX, char vY)
 {
-	mV[vY] <<= mV[vX];
+	mV[0xF] = mV[vX] & 1;
+	mV[vX] <<= 1;
 }
 #pragma endregion
 
