@@ -80,10 +80,12 @@ void Renderer::update(std::array<std::bitset<Chip8::WIDTH>, Chip8::HEIGHT> & Fra
 	{
 		for (int j = 0; j < Chip8::WIDTH; j++)
 		{
-			m_pixels[px++] = FrameBuffer[i][j] * 255;
-			m_pixels[px++] = FrameBuffer[i][j] * 255;
-			m_pixels[px++] = FrameBuffer[i][j] * 255;
-			m_pixels[px++] = FrameBuffer[i][j] * 255;
+			int set = FrameBuffer[i][j];
+
+			m_pixels[px++] = (set * m_white.r) + (!set * m_black.r);
+			m_pixels[px++] = (set * m_white.g) + (!set * m_black.g);
+			m_pixels[px++] = (set * m_white.b) + (!set * m_black.b);
+			m_pixels[px++] = (set * m_white.a) + (!set * m_black.a);
 		}
 	}
 	glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -92,6 +94,10 @@ void Renderer::update(std::array<std::bitset<Chip8::WIDTH>, Chip8::HEIGHT> & Fra
 
 void Renderer::render()
 {
+	glm::vec4 clear = m_black / 255.0f;
+	glClearColor(clear.r, clear.g, clear.b, clear.a);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	int x, y;
 	SDL_GetWindowSize(Window.GetSDLWindow(), &x, &y);
 	glViewport(0, 0, x, y);

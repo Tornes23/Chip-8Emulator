@@ -50,19 +50,14 @@ void InputHandler::HandleKeyEvent(SDL_Event event)
 
 bool InputHandler::KeyIsDown(Key index)
 {
-	if (ImGui::GetIO().WantCaptureKeyboard) return false;
-
 	return mKeyCurrent[static_cast<unsigned>(index)];
 }
 bool InputHandler::KeyIsUp(Key index)
 {
-	if (ImGui::GetIO().WantCaptureKeyboard) return false;
 	return !KeyIsDown(index);
 }
 bool InputHandler::KeyIsTriggered(Key index)
 {
-	if (ImGui::GetIO().WantCaptureKeyboard) return false;
-
 	if (mKeyCurrent[static_cast<unsigned>(index)] == true)
 	{
 		if (mKeyCurrent[static_cast<unsigned>(index)] != mKeyPrevious[static_cast<unsigned>(index)])
@@ -72,8 +67,6 @@ bool InputHandler::KeyIsTriggered(Key index)
 }
 bool InputHandler::KeyIsReleased(Key index)
 {
-	if (ImGui::GetIO().WantCaptureKeyboard) return false;
-
 	if (mKeyCurrent[static_cast<unsigned>(index)] == false)
 	{
 		if (mKeyCurrent[static_cast<unsigned>(index)] != mKeyPrevious[static_cast<unsigned>(index)])

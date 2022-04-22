@@ -27,7 +27,6 @@ public:
 
 	int LoadRom(std::string rom = "test_opcode.ch8");
 	void Update();
-	void Render();
 	void HandleOpcode(const Opcode& op);
 
 	void Ox8(const Opcode& op);

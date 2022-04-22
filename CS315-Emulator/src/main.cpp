@@ -9,12 +9,13 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include <bitset>
+#include <thread>
 
 #undef main
 int main(void)
 {
 	Chip8 emulator;
-	if (emulator.LoadRom() < 0)
+	if (emulator.LoadRom("petdog.ch8") < 0)
 		return -1;
 
 	Utils::InitSDL();
@@ -36,11 +37,11 @@ int main(void)
 		//Window.Update();
 		emulator.Update();
 		GFX.update(emulator.mFrameBuffer);
-
 		Window.Clear();
 		GFX.render();
 	
 		Window.SwapBuffers();
+		std::this_thread::sleep_for(std::chrono::milliseconds(30));
 		//Editor.Render();
 	}
 	
