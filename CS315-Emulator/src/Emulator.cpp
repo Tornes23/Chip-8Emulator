@@ -530,11 +530,17 @@ void Chip8::SHR(char vX, char vY)
 {
 	mV[0xF] = mV[vX] & 1;
 	mV[vX] >>= 1;
+	
+	// should be like this but test program won't pass
+	// mV[vX] >>= mV[vY];
 }
 void Chip8::SHL(char vX, char vY)
 {
 	mV[0xF] = mV[vX] & 1;
 	mV[vX] <<= 1;
+	
+	// should be like this but test program won't pass
+	// mV[vX] <<= mV[vY];
 }
 #pragma endregion
 
