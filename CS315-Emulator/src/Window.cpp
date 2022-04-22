@@ -1,5 +1,4 @@
 #include <iostream>
-#include <imgui/imgui.h>
 #include "gl/glew.h"
 #include "Window.h"
 #include "Input.h"

@@ -2,7 +2,6 @@
 #include <fstream>
 #include <sdl2/SDL.h>
 #include <gl/glew.h>
-#include <imgui/imgui.h>
 #include "Utils.h"
 #include "Window.h"
 

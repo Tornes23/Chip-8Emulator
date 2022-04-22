@@ -5,7 +5,6 @@
 #include "Emulator.h"
 #include "Disassembler.h"
 #include "Input.h"
-#include "Editor.h"
 #include "Shader.h"
 #include "Renderer.h"
 #include <bitset>
@@ -26,27 +25,21 @@ int main(void)
 	GFX.initialize();
 	
 	InputManager.Initialize();
-	//Editor.Initialize();
 
 	while (!Window.IsClosed())
 	{
-		//Editor.StartFrame();
 		InputManager.StartFrame();
 		InputManager.HandleEvents();
 		
-		//Window.Update();
 		emulator.Update();
 		GFX.update(emulator.mFrameBuffer);
 		Window.Clear();
 		GFX.render();
 	
 		Window.SwapBuffers();
-		std::this_thread::sleep_for(std::chrono::milliseconds(30));
-		//Editor.Render();
 	}
 	
 	Window.ShutDown();
-	//Editor.ShutDown();
 	SDL_Quit();
 
 	return 0;

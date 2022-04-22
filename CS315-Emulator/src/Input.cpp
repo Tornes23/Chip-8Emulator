@@ -38,7 +38,6 @@ void InputHandler::HandleEvents()
 	}
 }
 
-#include "imgui/imgui.h"
 
 void InputHandler::HandleKeyEvent(SDL_Event event)
 {

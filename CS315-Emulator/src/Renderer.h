@@ -4,7 +4,6 @@
 #include "Emulator.h"
 #include "Disassembler.h"
 #include "Input.h"
-#include "Editor.h"
 #include "Shader.h"
 
 struct color
