@@ -13,13 +13,6 @@
 #undef main
 int main(void)
 {
-
-	uint32_t screen = 1;
-
-	std::bitset<32> & h = *reinterpret_cast<std::bitset<32>*>(&screen);
-	
-	std::cout << h << std::endl;
-
 	Chip8 emulator;
 	if (emulator.LoadRom() < 0)
 		return -1;

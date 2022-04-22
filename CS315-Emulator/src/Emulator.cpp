@@ -236,7 +236,7 @@ void Chip8::OxF(const Opcode& op)
 	uint8_t val = op.GetValue();
 	uint8_t last = op.GetCount();
 
-	switch (last)
+	switch (val)
 	{
 		case 0x07://LD VX DT
 		{
@@ -285,6 +285,7 @@ void Chip8::OxF(const Opcode& op)
 		}
 		default:
 		{
+			std::cout << "NO HANDLER " << std::endl;
 			break;
 		}
 	}
@@ -443,14 +444,14 @@ void Chip8::LDBV(char v)
 }
 void Chip8::LDIV(char v)
 {
-	for (char i = 0; i < v; i++)
+	for (char i = 0; i <= v; i++)
 		mRAM[mI + i] = mV[i];//storing the states of the resgisters at address I
 
 	mI += v + 1;
 }
 void Chip8::LDVI(char v)
 {
-	for (char i = 0; i < v; i++)
+	for (char i = 0; i <= v + 1; i++)
 		mV[i] = mRAM[mI + i];//loading the states of the resgisters at address I
 
 	mI += v + 1;
